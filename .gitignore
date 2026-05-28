@@ -1,0 +1,54 @@
+# ── Credenciais e secrets (NUNCA subir) ──────────────────────
+.env
+.env.local
+.env.development
+.env.production
+.env.*.local
+supabase/.temp/
+supabase/functions/.env
+
+# ── Arquivos gerados por IA (não subir) ───────────────────────
+CLAUDE_vocare.md
+CLAUDE.md
+.claude/
+_fix_*.js
+_fix_*.ts
+
+# ── Documentos internos do time ───────────────────────────────
+docs/pitch-roteiro.md
+docs/contribuicoes-codigo.md
+
+# ── Arquivo original da logo (já copiado para assets/) ────────
+Sem t*.png
+
+# ── Deploy / infraestrutura ───────────────────────────────────
+.vercel
+.vercel/
+
+# ── Dependências ──────────────────────────────────────────────
+node_modules/
+.npm
+
+# ── Build ─────────────────────────────────────────────────────
+dist/
+build/
+.cache/
+
+# ── IDEs ──────────────────────────────────────────────────────
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# ── OS ────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Logs ──────────────────────────────────────────────────────
+*.log
+npm-debug.log*
+
+# ── Temporários ───────────────────────────────────────────────
+*.tmp
+*.temp
