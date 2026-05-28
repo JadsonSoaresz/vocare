@@ -17,6 +17,7 @@ _fix_*.ts
 # ── Documentos internos do time ───────────────────────────────
 docs/pitch-roteiro.md
 docs/contribuicoes-codigo.md
+docs/time/
 
 # ── Arquivo original da logo (já copiado para assets/) ────────
 Sem t*.png
