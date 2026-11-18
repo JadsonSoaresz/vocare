@@ -5,13 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Entrar — Vocare</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/main.css">
   <link rel="stylesheet" href="../css/components.css">
   <link rel="stylesheet" href="../css/mobile.css">
 </head>
 <body>
   <div class="auth-page" id="app">
+    <aside class="auth-aside" aria-hidden="true">
+      <div class="auth-aside-mosaic">
+        <span data-cover="Tecnologia" data-seed="a1"></span><span data-cover="Saúde" data-seed="a2"></span>
+        <span data-cover="Artes" data-seed="a3"></span><span data-cover="Agronegócio" data-seed="a4"></span>
+        <span data-cover="Direito" data-seed="a5"></span><span data-cover="Comunicação" data-seed="a6"></span>
+      </div>
+      <div class="auth-aside-text">
+        <span class="eyebrow">Vocare</span>
+        <h2>Que bom te ver de novo. <em>Vamos continuar?</em></h2>
+        <div class="auth-aside-proof">
+          <div class="avatar-stack"><span data-avatar="Ana Elize"></span><span data-avatar="Itallo Rodrigues"></span><span data-avatar="Sabrina Costa"></span><span data-avatar="Kauã Lima"></span></div>
+          <p>Gratuito para estudantes da rede pública do Piauí.</p>
+        </div>
+      </div>
+    </aside>
     <div class="auth-card animate-fade-in-scale">
       <!-- Logo -->
       <div class="auth-logo">
@@ -128,6 +143,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="../js/config.js"></script>
   <script src="../js/utils.js"></script>
+  <script src="../js/art.js"></script>
   <script src="../js/supabase.js"></script>
   <script src="../js/auth.js"></script>
   <script>

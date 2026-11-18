@@ -58,12 +58,8 @@ async function loadSession(sessionId) {
     document.getElementById('mentorStatus').textContent = 'Na sessão';
 
     const avatarEl = document.getElementById('mentorAvatar');
-    avatarEl.style.background = avatarGradient(mentorName);
-    if (mentor.avatar_url) {
-      avatarEl.innerHTML = `<img src="${escapeHtml(mentor.avatar_url)}" alt="${escapeHtml(mentorName)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
-    } else {
-      avatarEl.textContent = initials(mentorName);
-    }
+    avatarEl.style.background = 'var(--color-bg-alt)';
+    avatarEl.innerHTML = Art.avatarImg(mentorName, mentor.avatar_url);
 
     // Load message history
     _messages = await DB.messages.list(sessionId);

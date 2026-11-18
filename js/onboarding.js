@@ -270,7 +270,7 @@ function _appendAIMessage(text, useTypewriter = true) {
   // Build inner HTML with mini avatar
   const avatarEl = document.createElement('div');
   avatarEl.className = 'mini-avatar';
-  avatarEl.style.cssText = 'width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--color-primary),var(--color-secondary));display:flex;align-items:center;justify-content:center;font-size:0.875rem;flex-shrink:0;border:2px solid var(--color-accent);';
+  avatarEl.style.cssText = 'width:28px;height:28px;border-radius:50%;background:var(--color-text);display:flex;align-items:center;justify-content:center;font-size:0.875rem;flex-shrink:0;border:2px solid var(--color-accent);color:#fff;font-weight:800;';
   avatarEl.setAttribute('aria-hidden', 'true');
   avatarEl.textContent = 'V';
 
@@ -333,7 +333,7 @@ function _showTyping() {
   wrapper.id = 'typingIndicator';
 
   const avatar = document.createElement('div');
-  avatar.style.cssText = 'width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--color-primary),var(--color-secondary));display:flex;align-items:center;justify-content:center;font-size:0.875rem;flex-shrink:0;border:2px solid var(--color-accent);';
+  avatar.style.cssText = 'width:28px;height:28px;border-radius:50%;background:var(--color-text);display:flex;align-items:center;justify-content:center;font-size:0.875rem;flex-shrink:0;border:2px solid var(--color-accent);color:#fff;font-weight:800;';
   avatar.setAttribute('aria-hidden', 'true');
   avatar.textContent = 'V';
 

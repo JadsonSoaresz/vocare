@@ -256,13 +256,8 @@ function populateUserUI(profile) {
 
   // Avatar
   document.querySelectorAll('[data-user-avatar]').forEach(el => {
-    if (profile.avatar_url) {
-      if (el.tagName === 'IMG') el.src = profile.avatar_url;
-      else el.style.backgroundImage = `url(${profile.avatar_url})`;
-    } else {
-      el.textContent = initials(profile.name);
-      el.style.background = avatarGradient(profile.name);
-    }
+    if (el.tagName === 'IMG') el.src = profile.avatar_url || Art.avatar(profile.name);
+    else el.innerHTML = Art.avatarImg(profile.name, profile.avatar_url);
   });
 }
 
@@ -273,12 +268,7 @@ function initNavAvatar(logoutCallback) {
 
   const profile = Auth.profile;
   if (profile) {
-    if (profile.avatar_url) {
-      avatar.innerHTML = `<img src="${profile.avatar_url}" alt="${escapeHtml(profile.name)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
-    } else {
-      avatar.textContent = initials(profile.name);
-      avatar.style.background = avatarGradient(profile.name);
-    }
+    avatar.innerHTML = Art.avatarImg(profile.name, profile.avatar_url);
   }
 
   // Dropdown

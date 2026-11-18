@@ -7,421 +7,433 @@
   <title>Vocare — Descubra sua carreira</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/mobile.css">
   <style>
+    .lp-wrap { max-width: 1200px; margin: 0 auto; padding: 0 var(--space-5); }
+    .lp-section { padding: var(--space-16) 0; }
+    .lp-title { font-size: clamp(1.875rem, 4vw, 2.75rem); line-height: 1.08; letter-spacing: -0.025em; margin: var(--space-3) 0 var(--space-4); }
+    .lp-title em, .lp-hero h1 em { font-style: italic; color: var(--color-primary); }
+    .lp-lead { color: var(--color-muted); font-size: var(--text-lg); max-width: 560px; }
+
+    /* ── Navegação ── */
     .landing-nav {
-      position: fixed; top: 0; left: 0; right: 0;
-      height: 64px;
-      background: rgba(26,60,110,0.96);
-      backdrop-filter: blur(12px);
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 var(--space-6);
-      z-index: 200;
+      position: fixed; inset: 0 0 auto 0; height: 68px; z-index: 200;
+      background: rgba(246,244,239,0.82);
+      -webkit-backdrop-filter: saturate(160%) blur(14px); backdrop-filter: saturate(160%) blur(14px);
+      border-bottom: 1px solid transparent; transition: border-color 200ms ease;
     }
-    .landing-brand {
-      display: flex; align-items: center; gap: var(--space-2);
-      font-weight: 800; font-size: 1.5rem; color: #fff;
-      text-decoration: none;
-    }
-    .landing-brand em { color: var(--color-accent); font-style: normal; }
-    .landing-nav-actions { display: flex; align-items: center; gap: var(--space-3); }
+    .landing-nav.scrolled { border-bottom-color: var(--color-border-light); }
+    .landing-nav .lp-wrap { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); }
+    .landing-brand { display: flex; align-items: center; text-decoration: none !important; }
+    .landing-logo { filter: none; height: 48px; }
+    .landing-links { display: none; gap: var(--space-6); }
+    .landing-links a { color: var(--color-text-soft); font-weight: 600; font-size: var(--text-sm); }
+    .landing-links a:hover { color: var(--color-text); text-decoration: none; }
+    @media (min-width: 900px) { .landing-links { display: flex; } }
+    .landing-nav-actions { display: flex; align-items: center; gap: var(--space-2); }
+    .landing-nav-actions .btn { min-height: 40px; padding: 0.5rem 1rem; font-size: var(--text-sm); }
 
-    .stats-section {
-      background: var(--color-card);
-      padding: var(--space-8) var(--space-4);
-    }
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: var(--space-4);
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    @media (min-width: 640px) {
-      .stats-grid { grid-template-columns: repeat(4, 1fr); }
-    }
-    .stat-item {
-      text-align: center;
-      padding: var(--space-4);
-    }
-    .stat-num {
-      font-size: var(--text-3xl);
-      font-weight: 800;
-      color: var(--color-primary);
-      display: block;
-      line-height: 1;
-      margin-bottom: var(--space-2);
-    }
-    .stat-num em { color: var(--color-accent); font-style: normal; }
-    .stat-desc { font-size: var(--text-sm); color: var(--color-muted); }
+    /* ── Hero ── */
+    .lp-hero { padding: calc(68px + var(--space-12)) 0 var(--space-12); overflow: hidden; }
+    .lp-hero-grid { display: grid; gap: var(--space-12); align-items: center; }
+    @media (min-width: 980px) { .lp-hero-grid { grid-template-columns: 1.05fr 1fr; } }
+    .lp-hero h1 { font-size: clamp(2.5rem, 6.2vw, 4.5rem); line-height: 1; letter-spacing: -0.035em; margin: var(--space-4) 0 var(--space-5); }
+    .lp-hero-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-8); }
+    .lp-hero-actions .btn { min-height: 52px; padding: 0.875rem 1.5rem; }
+    .lp-proof { display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-8); color: var(--color-muted); font-size: var(--text-sm); }
+    .avatar-stack { display: flex; }
+    .avatar-stack span { width: 36px; height: 36px; border-radius: 50%; overflow: hidden; border: 2px solid var(--color-bg); margin-left: -10px; display: block; }
+    .avatar-stack span:first-child { margin-left: 0; }
 
-    .how-section {
-      padding: var(--space-12) var(--space-4);
-      background: var(--color-bg);
+    .lp-collage { position: relative; min-height: 520px; }
+    .collage-main {
+      position: absolute; top: 20px; left: 8%; right: 4%; height: 360px; border-radius: 28px; overflow: hidden;
+      box-shadow: var(--shadow-xl); background: var(--color-primary) center / cover;
     }
-    .how-steps {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: var(--space-6);
-      max-width: 900px;
-      margin: var(--space-8) auto 0;
+    .collage-main::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(12,20,36,0.78), rgba(12,20,36,0) 55%); }
+    .collage-main-info { position: absolute; left: 24px; right: 24px; bottom: 22px; z-index: 1; color: #fff; display: flex; justify-content: space-between; align-items: flex-end; gap: var(--space-3); }
+    .collage-main-info small { display: block; opacity: 0.75; font-size: var(--text-xs); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 4px; }
+    .collage-main-info strong { font-family: var(--font-display); font-weight: 600; font-size: 1.75rem; line-height: 1.1; }
+    .collage-score { background: var(--color-accent); color: var(--color-text); font-weight: 800; border-radius: 999px; padding: 0.4rem 0.85rem; font-size: var(--text-sm); white-space: nowrap; }
+    .float-card {
+      position: absolute; background: var(--color-card); border-radius: 18px; padding: var(--space-4);
+      box-shadow: var(--shadow-lg); border: 1px solid var(--color-border-light);
+      animation: floaty 7s ease-in-out infinite;
     }
-    .how-step {
-      text-align: center;
-      position: relative;
+    @keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+    .float-voca { top: 0; left: 0; max-width: 270px; display: flex; gap: var(--space-3); align-items: flex-start; animation-delay: -2s; }
+    .float-voca .v {
+      width: 34px; height: 34px; border-radius: 50%; background: var(--color-text); color: #fff; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-weight: 800; font-family: var(--font-display);
     }
-    .step-num {
-      width: 48px; height: 48px;
-      border-radius: 50%;
-      background: var(--color-primary);
-      color: #fff;
-      font-weight: 800; font-size: 1.25rem;
-      display: inline-flex; align-items: center; justify-content: center;
-      margin-bottom: var(--space-3);
-      box-shadow: 0 4px 16px rgba(26,60,110,0.3);
-    }
-    .cta-section {
-      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-      color: #fff;
-      padding: var(--space-12) var(--space-4);
-      text-align: center;
-    }
-    .cta-section h2 { color: #fff; font-size: var(--text-2xl); margin-bottom: var(--space-4); }
-    .cta-section p { color: rgba(255,255,255,0.85); margin-bottom: var(--space-6); }
+    .float-voca p { font-size: var(--text-sm); color: var(--color-text-soft); line-height: 1.45; margin: 0; }
+    .float-voca b { color: var(--color-text); }
+    .float-mentor { bottom: 30px; left: 0; display: flex; gap: var(--space-3); align-items: center; animation-delay: -4s; }
+    .float-mentor .av { width: 48px; height: 48px; border-radius: 50%; overflow: hidden; }
+    .float-mentor strong { display: block; font-size: var(--text-sm); }
+    .float-mentor span { font-size: var(--text-xs); color: var(--color-muted); }
+    .dot-on { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--color-success); margin-right: 4px; }
+    .float-plan { bottom: 0; right: 0; width: 230px; animation-delay: -1s; }
+    .float-plan .row { display: flex; justify-content: space-between; font-size: var(--text-xs); color: var(--color-muted); font-weight: 600; margin-bottom: 8px; }
+    .float-plan strong { font-family: var(--font-display); font-size: 1.125rem; display: block; margin-bottom: 10px; }
+    .float-plan .bar { height: 6px; border-radius: 999px; background: var(--color-bg-alt); overflow: hidden; }
+    .float-plan .bar i { display: block; height: 100%; width: 62%; background: var(--color-accent); border-radius: inherit; }
+    @media (max-width: 979px) { .lp-collage { min-height: 460px; } .collage-main { left: 0; right: 0; } }
+    @media (max-width: 520px) { .float-voca { max-width: 220px; } .float-plan { width: 190px; } .collage-main { height: 300px; } .float-mentor { display: none; } .lp-collage { min-height: 420px; } }
 
-    .footer-strip {
-      background: var(--color-text);
-      color: rgba(255,255,255,0.6);
-      padding: var(--space-5) var(--space-4);
-      text-align: center;
-      font-size: var(--text-sm);
-    }
-    .footer-strip a { color: rgba(255,255,255,0.8); text-decoration: underline; }
+    /* ── Números ── */
+    .lp-stats { border-top: 1px solid var(--color-border-light); border-bottom: 1px solid var(--color-border-light); }
+    .lp-stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); }
+    @media (min-width: 768px) { .lp-stats-grid { grid-template-columns: repeat(4, 1fr); } }
+    .lp-stat { padding: var(--space-8) var(--space-5); border-left: 1px solid var(--color-border-light); }
+    .lp-stat:first-child { border-left: none; }
+    .lp-stat b { display: block; font-family: var(--font-display); font-weight: 600; font-size: clamp(2.25rem, 4vw, 3rem); line-height: 1; letter-spacing: -0.03em; color: var(--color-text); }
+    .lp-stat span { color: var(--color-muted); font-size: var(--text-sm); }
+    @media (max-width: 767px) { .lp-stat:nth-child(3) { border-left: none; } .lp-stat { border-top: 1px solid var(--color-border-light); } .lp-stat:nth-child(-n+2) { border-top: none; } }
 
-    .testimonial-section {
-      padding: var(--space-12) var(--space-4);
-      background: var(--color-card);
-    }
-    .testimonial-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: var(--space-4);
-      max-width: 900px;
-      margin: var(--space-8) auto 0;
-    }
-    .testimonial-card {
-      background: var(--color-bg);
-      border-radius: var(--radius-xl);
-      padding: var(--space-5);
-      border: 1px solid var(--color-border-light);
-    }
-    .testimonial-text {
-      font-size: var(--text-sm);
-      color: var(--color-text-soft);
-      font-style: italic;
-      margin-bottom: var(--space-3);
-      line-height: 1.7;
-    }
-    .testimonial-author {
-      display: flex; align-items: center; gap: var(--space-2);
-      font-size: var(--text-sm);
-    }
-    .testimonial-author strong { color: var(--color-text); }
-    .testimonial-author span  { color: var(--color-muted); font-size: var(--text-xs); }
+    /* ── Vitrine de carreiras ── */
+    .lp-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--space-4); margin-bottom: var(--space-8); }
+    .career-grid { display: grid; gap: var(--space-4); grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); }
+    .career-card { border-radius: 20px; overflow: hidden; background: var(--color-card); border: 1px solid var(--color-border-light); box-shadow: var(--shadow-card); transition: transform 250ms var(--ease), box-shadow 250ms var(--ease); }
+    .career-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .career-card .art { aspect-ratio: 16/10; }
+    .career-card .body { padding: var(--space-4); }
+    .career-card small { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-muted); }
+    .career-card h3 { font-size: 1.1875rem; margin: 4px 0 6px; }
+    .career-card p { font-size: var(--text-sm); color: var(--color-text-soft); margin: 0; display: flex; justify-content: space-between; gap: var(--space-2); }
+    .career-card p span { color: var(--color-success); font-weight: 700; display: inline-flex; align-items: center; gap: 4px; }
 
-    .section-label {
-      text-align: center;
-      font-size: var(--text-sm);
-      font-weight: 600;
-      color: var(--color-accent);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: var(--space-2);
+    /* ── Recursos (bento) ── */
+    .bento { display: grid; gap: var(--space-4); grid-template-columns: 1fr; }
+    @media (min-width: 900px) { .bento { grid-template-columns: repeat(6, 1fr); } .b-wide { grid-column: span 3; } .b-third { grid-column: span 2; } }
+    .b-tile { background: var(--color-card); border: 1px solid var(--color-border-light); border-radius: 24px; padding: var(--space-6); overflow: hidden; position: relative; }
+    .b-tile h3 { font-size: 1.375rem; margin: var(--space-4) 0 var(--space-2); }
+    .b-tile p { color: var(--color-muted); font-size: var(--text-sm); margin: 0; line-height: 1.6; }
+    .b-icon { width: 44px; height: 44px; border-radius: 12px; background: var(--color-bg-alt); color: var(--color-text); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
+    .b-dark { background: var(--color-text); border-color: var(--color-text); }
+    .b-dark h3 { color: #fff; } .b-dark p { color: rgba(255,255,255,0.7); }
+    .b-dark .b-icon { background: rgba(255,255,255,0.1); color: #fff; }
+    .chat-demo { margin-top: var(--space-6); display: flex; flex-direction: column; gap: 10px; }
+    .chat-demo div { max-width: 82%; padding: 10px 14px; border-radius: 16px; font-size: var(--text-sm); line-height: 1.45; }
+    .chat-demo .me { align-self: flex-end; background: var(--color-accent); color: var(--color-text); border-bottom-right-radius: 4px; }
+    .chat-demo .bot { background: rgba(255,255,255,0.1); color: #fff; border-bottom-left-radius: 4px; }
+    .bars-demo { margin-top: var(--space-6); display: grid; gap: 12px; }
+    .bars-demo div { display: grid; grid-template-columns: 110px 1fr 40px; align-items: center; gap: 10px; font-size: var(--text-xs); font-weight: 700; color: var(--color-text-soft); }
+    .bars-demo i { display: block; height: 8px; border-radius: 999px; background: var(--color-bg-alt); position: relative; overflow: hidden; }
+    .bars-demo i::after { content: ''; position: absolute; inset: 0 auto 0 0; width: var(--w); background: var(--c, var(--color-primary)); border-radius: inherit; }
+
+    /* ── Como funciona ── */
+    .steps { display: grid; gap: var(--space-6); grid-template-columns: 1fr; counter-reset: s; }
+    @media (min-width: 768px) { .steps { grid-template-columns: repeat(5, 1fr); } }
+    .step { position: relative; padding-top: var(--space-6); border-top: 2px solid var(--color-border); }
+    .step::before {
+      counter-increment: s; content: '0' counter(s);
+      display: block; font-family: var(--font-display); font-size: 2.25rem; font-weight: 600; color: var(--color-accent); line-height: 1; margin-bottom: var(--space-3);
     }
-    .section-title {
-      text-align: center;
-      font-size: var(--text-2xl);
-      font-weight: 800;
-      color: var(--color-primary);
-    }
-    @media (min-width: 640px) {
-      .section-title { font-size: var(--text-3xl); }
-    }
+    .step h4 { font-size: var(--text-base); margin-bottom: var(--space-1); }
+    .step p { color: var(--color-muted); font-size: var(--text-sm); margin: 0; }
+
+    /* ── Depoimentos ── */
+    .quotes { display: grid; gap: var(--space-4); grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+    .quote { background: var(--color-card); border: 1px solid var(--color-border-light); border-radius: 24px; padding: var(--space-6); display: flex; flex-direction: column; }
+    .quote blockquote { font-family: var(--font-display); font-size: 1.1875rem; line-height: 1.45; color: var(--color-text); margin: 0 0 var(--space-6); flex: 1; }
+    .quote blockquote::before { content: '\201C'; display: block; font-size: 3.5rem; line-height: 0.6; color: var(--color-accent); margin-bottom: var(--space-3); }
+    .quote figcaption { display: flex; align-items: center; gap: var(--space-3); }
+    .quote .av { width: 48px; height: 48px; border-radius: 50%; overflow: hidden; flex-shrink: 0; }
+    .quote strong { display: block; font-size: var(--text-sm); }
+    .quote span { font-size: var(--text-xs); color: var(--color-muted); }
+
+    /* ── CTA ── */
+    .lp-cta { background: var(--color-text); border-radius: 32px; overflow: hidden; display: grid; color: #fff; }
+    @media (min-width: 900px) { .lp-cta { grid-template-columns: 1.2fr 1fr; } }
+    .lp-cta-text { padding: clamp(2rem, 5vw, 4rem); }
+    .lp-cta h2 { color: #fff; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.05; letter-spacing: -0.03em; margin: var(--space-3) 0 var(--space-4); }
+    .lp-cta h2 em { color: var(--color-accent); font-style: italic; }
+    .lp-cta p { color: rgba(255,255,255,0.72); margin-bottom: var(--space-8); }
+    .lp-cta .eyebrow { color: rgba(255,255,255,0.6); }
+    .lp-cta-mosaic { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 10px; min-height: 280px; }
+    .lp-cta-mosaic span { border-radius: 18px; background: center / cover; }
+    .lp-cta-mosaic span:nth-child(1) { grid-row: span 2; }
+    .lp-cta-mosaic span:nth-child(4) { grid-column: span 2; }
+
+    /* ── Rodapé ── */
+    .lp-footer { padding: var(--space-12) 0 var(--space-8); color: var(--color-muted); font-size: var(--text-sm); }
+    .lp-footer-grid { display: grid; gap: var(--space-8); grid-template-columns: 1fr; border-top: 1px solid var(--color-border-light); padding-top: var(--space-8); }
+    @media (min-width: 768px) { .lp-footer-grid { grid-template-columns: 2fr 1fr 1fr; } }
+    .lp-footer h5 { font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text); margin-bottom: var(--space-3); }
+    .lp-footer a { color: var(--color-muted); display: block; margin-bottom: var(--space-2); }
+    .lp-footer a:hover { color: var(--color-text); }
+    .lp-footer-bottom { margin-top: var(--space-8); font-size: var(--text-xs); }
   </style>
 </head>
 <body>
-  <!-- Navigation -->
-  <nav class="landing-nav" aria-label="Navegação principal">
-    <a href="index.html" class="landing-brand">
-      <img src="./assets/logo.png" alt="Vocare" class="landing-logo">
-    </a>
-    <div class="landing-nav-actions" id="navActions">
-      <a href="auth/login.html" class="btn btn-ghost text-white" style="color:rgba(255,255,255,0.9)">Entrar</a>
-      <a href="auth/register.html" class="btn btn-accent btn-sm">Começar grátis</a>
+  <!-- Navegação -->
+  <nav class="landing-nav" id="landingNav" aria-label="Navegação principal">
+    <div class="lp-wrap">
+      <a href="index.html" class="landing-brand">
+        <img src="./assets/logo.png" alt="Vocare" class="landing-logo">
+      </a>
+      <div class="landing-links">
+        <a href="#carreiras">Carreiras</a>
+        <a href="#recursos">Recursos</a>
+        <a href="#como-funciona">Como funciona</a>
+        <a href="#historias">Histórias</a>
+      </div>
+      <div class="landing-nav-actions" id="navActions">
+        <a href="auth/login.html" class="btn btn-ghost">Entrar</a>
+        <a href="auth/register.html" class="btn btn-primary">Começar grátis</a>
+      </div>
     </div>
   </nav>
 
   <!-- Hero -->
-  <section class="hero-section" style="padding-top: calc(var(--space-16) + 64px)">
-    <div class="container">
-      <span class="badge badge-accent" style="margin-bottom:var(--space-4);display:inline-flex">
-        Iniciativa Do Piauí Para o Mundo 2026
-      </span>
-      <h1 class="hero-title animate-fade-in-up">
-        Descubra a carreira<br>
-        <em>feita pra você</em>
-      </h1>
-      <p class="hero-subtitle animate-fade-in-up delay-100">
-        A Vocare usa inteligência artificial para ajudar estudantes do ensino médio público
-        a descobrirem seu caminho profissional — de forma gratuita, interativa e personalizada.
-      </p>
-      <div class="flex justify-center gap-4 flex-wrap animate-fade-in-up delay-200">
-        <a href="auth/register.html" class="btn btn-accent btn-lg">
-          Descobrir minha carreira
-        </a>
-        <a href="auth/login.html" class="btn btn-outline btn-lg" style="border-color:rgba(255,255,255,0.5);color:#fff">
-          Já tenho conta
-        </a>
+  <header class="lp-hero">
+    <div class="lp-wrap lp-hero-grid">
+      <div class="animate-fade-in-up">
+        <span class="eyebrow">Do Piauí para o mundo · 2026</span>
+        <h1>Descubra a carreira <em>feita pra você</em>.</h1>
+        <p class="lp-lead">
+          Converse com a Voca, faça um teste vocacional que se adapta às suas respostas e receba um plano de
+          carreira com cursos gratuitos — tudo pensado para estudantes do ensino médio público.
+        </p>
+        <div class="lp-hero-actions">
+          <a href="auth/register.html" class="btn btn-primary btn-lg">Começar agora — é grátis <i data-icon="arrow-right"></i></a>
+          <a href="auth/login.html" class="btn btn-outline btn-lg">Já tenho conta</a>
+        </div>
+        <div class="lp-proof">
+          <div class="avatar-stack" aria-hidden="true">
+            <span data-avatar="Ana Elize"></span><span data-avatar="Itallo Rodrigues"></span><span data-avatar="Sabrina Costa"></span><span data-avatar="Kauã Lima"></span><span data-avatar="Yasmin Sousa"></span>
+          </div>
+          <span>Sem cartão de crédito · 100% gratuito para a rede pública</span>
+        </div>
       </div>
-      <p style="color:rgba(255,255,255,0.6);font-size:var(--text-sm);margin-top:var(--space-4)" class="animate-fade-in-up delay-300">
-        100% gratuito para estudantes · Sem cartão de crédito
-      </p>
-    </div>
-  </section>
 
-  <!-- Stats -->
-  <section class="stats-section">
-    <div class="stats-grid">
-      <div class="stat-item">
-        <span class="stat-num"><em>20</em>+</span>
-        <span class="stat-desc">Profissões mapeadas com IA</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-num"><em>8</em>min</span>
-        <span class="stat-desc">Para completar o teste vocacional</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-num"><em>100%</em></span>
-        <span class="stat-desc">Gratuito para estudante público</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-num"><em>IA</em></span>
-        <span class="stat-desc">Plano de carreira personalizado</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- Careers Preview -->
-  <section style="background:var(--color-bg);padding:var(--space-12) var(--space-4)">
-    <div class="container">
-      <p class="section-label">Explore carreiras</p>
-      <h2 class="section-title">20+ profissões mapeadas para você</h2>
-      <p style="text-align:center;color:var(--color-muted);margin:var(--space-3) auto var(--space-8);max-width:520px">
-        Cada profissão tem descrição, faixa salarial, perspectiva de mercado, habilidades necessárias e vídeos no YouTube.
-      </p>
-      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-3);max-width:720px;margin:0 auto" id="careersPreview">
-        <!-- 8 cards estáticos -->
-        <div style="background:linear-gradient(135deg,#1D4ED8,#3B82F6);border-radius:var(--radius-xl);padding:var(--space-4);color:#fff;display:flex;align-items:center;gap:var(--space-3)">
-          <span style="font-size:1.75rem"><i data-icon="laptop"></i></span>
-          <div><div style="font-weight:700;font-size:var(--text-sm)">Engenheiro(a) de Software</div><div style="font-size:var(--text-xs);opacity:0.8">R$ 4k–18k/mês · Crescente</div></div>
-        </div>
-        <div style="background:linear-gradient(135deg,#065F46,#10B981);border-radius:var(--radius-xl);padding:var(--space-4);color:#fff;display:flex;align-items:center;gap:var(--space-3)">
-          <span style="font-size:1.75rem"><i data-icon="heart-pulse"></i></span>
-          <div><div style="font-weight:700;font-size:var(--text-sm)">Médico(a)</div><div style="font-size:var(--text-xs);opacity:0.8">R$ 8k–35k/mês · Estável</div></div>
-        </div>
-        <div style="background:linear-gradient(135deg,#92400E,#F59E0B);border-radius:var(--radius-xl);padding:var(--space-4);color:#fff;display:flex;align-items:center;gap:var(--space-3)">
-          <span style="font-size:1.75rem"><i data-icon="book"></i></span>
-          <div><div style="font-weight:700;font-size:var(--text-sm)">Professor(a)</div><div style="font-size:var(--text-xs);opacity:0.8">R$ 2,5k–8k/mês · Estável</div></div>
-        </div>
-        <div style="background:linear-gradient(135deg,#374151,#6B7280);border-radius:var(--radius-xl);padding:var(--space-4);color:#fff;display:flex;align-items:center;gap:var(--space-3)">
-          <span style="font-size:1.75rem"><i data-icon="wrench"></i></span>
-          <div><div style="font-weight:700;font-size:var(--text-sm)">Engenheiro(a) Civil</div><div style="font-size:var(--text-xs);opacity:0.8">R$ 4,5k–16k/mês · Estável</div></div>
-        </div>
-        <div style="background:linear-gradient(135deg,#6B21A8,#9333EA);border-radius:var(--radius-xl);padding:var(--space-4);color:#fff;display:flex;align-items:center;gap:var(--space-3)">
-          <span style="font-size:1.75rem"><i data-icon="palette"></i></span>
-          <div><div style="font-weight:700;font-size:var(--text-sm)">Designer UX/UI</div><div style="font-size:var(--text-xs);opacity:0.8">R$ 3,5k–14k/mês · Crescente</div></div>
-        </div>
-        <div style="background:linear-gradient(135deg,#0F766E,#0D9488);border-radius:var(--radius-xl);padding:var(--space-4);color:#fff;display:flex;align-items:center;gap:var(--space-3)">
-          <span style="font-size:1.75rem"><i data-icon="scale"></i></span>
-          <div><div style="font-weight:700;font-size:var(--text-sm)">Advogado(a)</div><div style="font-size:var(--text-xs);opacity:0.8">R$ 3k–20k/mês · Estável</div></div>
-        </div>
-        <div style="background:linear-gradient(135deg,#7C3AED,#4F46E5);border-radius:var(--radius-xl);padding:var(--space-4);color:#fff;display:flex;align-items:center;gap:var(--space-3)">
-          <span style="font-size:1.75rem"><i data-icon="flask"></i></span>
-          <div><div style="font-weight:700;font-size:var(--text-sm)">Cientista de Dados</div><div style="font-size:var(--text-xs);opacity:0.8">R$ 5k–20k/mês · Crescente</div></div>
-        </div>
-        <div style="background:linear-gradient(135deg,#166534,#15803D);border-radius:var(--radius-xl);padding:var(--space-4);color:#fff;display:flex;align-items:center;gap:var(--space-3)">
-          <span style="font-size:1.75rem"><i data-icon="sprout"></i></span>
-          <div><div style="font-weight:700;font-size:var(--text-sm)">Eng. Agrônomo(a)</div><div style="font-size:var(--text-xs);opacity:0.8">R$ 3,5k–14k/mês · Crescente</div></div>
-        </div>
-      </div>
-      <div style="text-align:center;margin-top:var(--space-6)">
-        <a href="auth/register.html" class="btn btn-primary">Ver todas as 45 profissões →</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Features -->
-  <section class="how-section" style="background:var(--color-card)">
-    <div class="container">
-      <p class="section-label">O que a Vocare oferece</p>
-      <h2 class="section-title">Tudo que você precisa para<br>escolher sua carreira</h2>
-
-      <div class="feature-grid animate-fade-in-up">
-        <div class="feature-item">
-          <div class="feature-icon"><i data-icon="message"></i></div>
-          <h3 class="feature-title">Chat com a Voca (IA)</h3>
-          <p class="feature-desc">Converse com a Voca como se fosse uma amiga. Ela mapeia seus interesses, habilidades e sonhos de forma natural — sem questionários chatos.</p>
-        </div>
-        <div class="feature-item">
-          <div class="feature-icon"><i data-icon="target"></i></div>
-          <h3 class="feature-title">Teste Vocacional Adaptativo</h3>
-          <p class="feature-desc">Perguntas inteligentes que se adaptam às suas respostas. Em menos de 8 minutos, você tem um perfil vocacional completo.</p>
-        </div>
-        <div class="feature-item">
-          <div class="feature-icon"><i data-icon="video"></i></div>
-          <h3 class="feature-title">Vídeos de Profissionais</h3>
-          <p class="feature-desc">Para cada carreira, acesse vídeos reais de profissionais no YouTube contando como é o dia a dia, o salário e como chegaram lá.</p>
-        </div>
-        <div class="feature-item">
-          <div class="feature-icon"><i data-icon="user-check"></i></div>
-          <h3 class="feature-title">Mentores Voluntários</h3>
-          <p class="feature-desc">Profissionais formados que se voluntariam para conversar com você. 2 sessões gratuitas por mês — tire suas dúvidas com quem vive a profissão.</p>
-        </div>
-        <div class="feature-item">
-          <div class="feature-icon"><i data-icon="clipboard"></i></div>
-          <h3 class="feature-title">Plano de Carreira com IA</h3>
-          <p class="feature-desc">Receba um plano personalizado com trilha de estudos, cursos gratuitos (YouTube, Khan Academy, SENAI) e metas semanais realistas.</p>
-        </div>
-        <div class="feature-item">
-          <div class="feature-icon"><i data-icon="phone"></i></div>
-          <h3 class="feature-title">Lembretes no WhatsApp</h3>
-          <p class="feature-desc">Receba até 3 mensagens por semana com motivação e lembretes das suas metas. Direto no seu celular, sem precisar abrir o app.</p>
-        </div>
-        <div class="feature-item">
-          <div class="feature-icon"><i data-icon="briefcase"></i></div>
-          <h3 class="feature-title">Vagas Compatíveis</h3>
-          <p class="feature-desc">Empresas parceiras publicam vagas de estágio e jovem aprendiz. Você só vê vagas compatíveis com seu perfil — sem ruído.</p>
-        </div>
-        <div class="feature-item">
-          <div class="feature-icon"><i data-icon="award"></i></div>
-          <h3 class="feature-title">100% Gratuito Sempre</h3>
-          <p class="feature-desc">A jornada completa — chat, teste, plano, mentoria básica — é gratuita para estudantes da rede pública. Sem pegadinhas.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- How it works -->
-  <section style="background:var(--color-card);padding:var(--space-12) var(--space-4)">
-    <div class="container">
-      <p class="section-label">Como funciona</p>
-      <h2 class="section-title">Sua jornada em 5 passos</h2>
-      <div class="how-steps">
-        <div class="how-step">
-          <div class="step-num">1</div>
-          <h4>Crie sua conta</h4>
-          <p class="text-muted text-sm mt-2">Cadastre-se grátis em menos de 2 minutos.</p>
-        </div>
-        <div class="how-step">
-          <div class="step-num">2</div>
-          <h4>Converse com a Voca</h4>
-          <p class="text-muted text-sm mt-2">Nossa IA te conhece através de uma conversa descontraída.</p>
-        </div>
-        <div class="how-step">
-          <div class="step-num">3</div>
-          <h4>Faça o teste</h4>
-          <p class="text-muted text-sm mt-2">Responda o teste vocacional adaptativo (8 min).</p>
-        </div>
-        <div class="how-step">
-          <div class="step-num">4</div>
-          <h4>Explore carreiras</h4>
-          <p class="text-muted text-sm mt-2">Veja profissões compatíveis, vlogs e mentores.</p>
-        </div>
-        <div class="how-step">
-          <div class="step-num">5</div>
-          <h4>Receba seu plano</h4>
-          <p class="text-muted text-sm mt-2">Plano de carreira personalizado gerado para você.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Testimonials -->
-  <section class="testimonial-section">
-    <div class="container">
-      <p class="section-label">Histórias reais</p>
-      <h2 class="section-title">Estudantes que encontraram seu caminho</h2>
-      <div class="testimonial-grid">
-        <div class="testimonial-card">
-          <div style="display:flex;gap:4px;margin-bottom:var(--space-3)"><i data-icon="star-fill"></i><i data-icon="star-fill"></i><i data-icon="star-fill"></i><i data-icon="star-fill"></i><i data-icon="star-fill"></i></div>
-          <p class="testimonial-text">"Eu queria medicina, mas achava impossível saindo de escola pública. A Voca me mostrou o caminho: SiSU, cotas, e um mentor que é médico formado pela UFPI me deu os melhores conselhos. Agora estou nos 100 dias ENEM com um plano concreto."</p>
-          <div class="testimonial-author">
-            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#1A3C6E,#2E6DB4)">AE</div>
-            <div>
-              <strong>Ana Elize</strong><br>
-              <span>3º ano · CETI Pinheiro Machado, Teresina</span>
-            </div>
+      <div class="lp-collage" aria-hidden="true">
+        <div class="collage-main" data-cover="Saúde" data-seed="Médico(a)">
+          <div class="collage-main-info">
+            <div><small>Sua maior compatibilidade</small><strong>Médico(a)</strong></div>
+            <span class="collage-score">94% compatível</span>
           </div>
         </div>
-        <div class="testimonial-card">
-          <div style="display:flex;gap:4px;margin-bottom:var(--space-3)"><i data-icon="star-fill"></i><i data-icon="star-fill"></i><i data-icon="star-fill"></i><i data-icon="star-fill"></i><i data-icon="star-fill"></i></div>
-          <p class="testimonial-text">"Sempre gostei de computador mas não sabia que isso podia virar carreira aqui no Piauí. A Vocare me mostrou que Teresina tem um polo de startups crescendo. Comecei um curso gratuito de programação da lista e já fiz meu primeiro projeto."</p>
-          <div class="testimonial-author">
-            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#0F766E,#0D9488)">IT</div>
-            <div>
-              <strong>Itallo Rodrigues</strong><br>
-              <span>2º ano · Escola Estadual, Picos, PI</span>
-            </div>
+        <div class="float-card float-voca">
+          <span class="v">V</span>
+          <p><b>Voca:</b> Você disse que curte biologia e cuidar de pessoas. Olha essa carreira aqui!</p>
+        </div>
+        <div class="float-card float-mentor">
+          <span class="av" data-avatar="Ana Lima"></span>
+          <div><strong>Ana Lima</strong><span><i class="dot-on"></i>Médica pediatra · mentora</span></div>
+        </div>
+        <div class="float-card float-plan">
+          <div class="row"><span>Plano de carreira</span><span>5/8 metas</span></div>
+          <strong>Rumo ao ENEM</strong>
+          <div class="bar"><i></i></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Números -->
+  <section class="lp-stats" aria-label="Vocare em números">
+    <div class="lp-wrap lp-stats-grid">
+      <div class="lp-stat"><b>45</b><span>profissões e cursos mapeados</span></div>
+      <div class="lp-stat"><b>8 min</b><span>para concluir o teste vocacional</span></div>
+      <div class="lp-stat"><b>100%</b><span>gratuito para estudante da rede pública</span></div>
+      <div class="lp-stat"><b>1:1</b><span>conversas com profissionais da área</span></div>
+    </div>
+  </section>
+
+  <!-- Vitrine de carreiras -->
+  <section class="lp-section" id="carreiras">
+    <div class="lp-wrap">
+      <div class="lp-head">
+        <div>
+          <span class="eyebrow">Explore carreiras</span>
+          <h2 class="lp-title">45 profissões, <em>explicadas de verdade</em>.</h2>
+          <p class="lp-lead">Salário, mercado, formação e vídeos de quem trabalha na área — sem enrolação.</p>
+        </div>
+        <a href="auth/register.html" class="btn btn-outline">Ver todas as profissões <i data-icon="arrow-right"></i></a>
+      </div>
+      <div class="career-grid">
+        <article class="career-card"><div class="art" data-cover="Tecnologia" data-seed="Engenheiro(a) de Software"></div><div class="body"><small>Tecnologia</small><h3>Engenheiro(a) de Software</h3><p>R$ 4 mil – 18 mil <span><i data-icon="trending-up"></i> Em alta</span></p></div></article>
+        <article class="career-card"><div class="art" data-cover="Saúde" data-seed="Enfermeiro(a)"></div><div class="body"><small>Saúde</small><h3>Enfermeiro(a)</h3><p>R$ 3 mil – 9 mil <span><i data-icon="trending-up"></i> Em alta</span></p></div></article>
+        <article class="career-card"><div class="art" data-cover="Artes" data-seed="Designer UX/UI"></div><div class="body"><small>Artes</small><h3>Designer UX/UI</h3><p>R$ 3,5 mil – 14 mil <span><i data-icon="trending-up"></i> Em alta</span></p></div></article>
+        <article class="career-card"><div class="art" data-cover="Agronegócio" data-seed="Eng. Agrônomo(a)"></div><div class="body"><small>Agronegócio</small><h3>Eng. Agrônomo(a)</h3><p>R$ 3,5 mil – 14 mil <span><i data-icon="trending-up"></i> Em alta</span></p></div></article>
+        <article class="career-card"><div class="art" data-cover="Direito" data-seed="Advogado(a)"></div><div class="body"><small>Direito</small><h3>Advogado(a)</h3><p>R$ 3 mil – 20 mil <span style="color:var(--color-muted)"><i data-icon="arrow-right"></i> Estável</span></p></div></article>
+        <article class="career-card"><div class="art" data-cover="Educação" data-seed="Professor(a)"></div><div class="body"><small>Educação</small><h3>Professor(a)</h3><p>R$ 2,5 mil – 8 mil <span style="color:var(--color-muted)"><i data-icon="arrow-right"></i> Estável</span></p></div></article>
+        <article class="career-card"><div class="art" data-cover="Gastronomia" data-seed="Gastronomia"></div><div class="body"><small>Gastronomia</small><h3>Chef de Cozinha</h3><p>R$ 2 mil – 10 mil <span><i data-icon="trending-up"></i> Em alta</span></p></div></article>
+        <article class="career-card"><div class="art" data-cover="Meio Ambiente" data-seed="Gestão Ambiental"></div><div class="body"><small>Meio Ambiente</small><h3>Gestor(a) Ambiental</h3><p>R$ 3 mil – 11 mil <span><i data-icon="trending-up"></i> Em alta</span></p></div></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Recursos -->
+  <section class="lp-section" id="recursos" style="padding-top:0">
+    <div class="lp-wrap">
+      <div class="lp-head">
+        <div>
+          <span class="eyebrow">O que a Vocare oferece</span>
+          <h2 class="lp-title">Da dúvida ao <em>primeiro passo</em>.</h2>
+        </div>
+      </div>
+      <div class="bento">
+        <div class="b-tile b-dark b-wide">
+          <div class="b-icon"><i data-icon="message"></i></div>
+          <h3>Converse com a Voca</h3>
+          <p>Uma assistente que te conhece numa conversa leve — interesses, matérias favoritas, sonhos — sem questionário chato.</p>
+          <div class="chat-demo" aria-hidden="true">
+            <div class="me">Gosto de desenhar e de mexer no computador. Isso vira profissão?</div>
+            <div class="bot">Vira sim! Design de interfaces junta as duas coisas. Quer ver quanto ganha e onde estudar no Piauí?</div>
           </div>
         </div>
-        <div class="testimonial-card">
-          <div style="display:flex;gap:4px;margin-bottom:var(--space-3)"><i data-icon="star-fill"></i><i data-icon="star-fill"></i><i data-icon="star-fill"></i><i data-icon="star-fill"></i><i data-icon="star-fill"></i></div>
-          <p class="testimonial-text">"Minha família queria que eu fizesse concurso público. Mas depois que conversei com a Voca e fiz o teste, descobri que tenho perfil criativo forte. Agora estou seguindo publicidade digital — e minha família entendeu minha escolha."</p>
-          <div class="testimonial-author">
-            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#C2410C,#EA580C)">SA</div>
-            <div>
-              <strong>Sabrina Costa</strong><br>
-              <span>3º ano · Escola Estadual, Floriano, PI</span>
-            </div>
+        <div class="b-tile b-wide">
+          <div class="b-icon"><i data-icon="target"></i></div>
+          <h3>Teste vocacional adaptativo</h3>
+          <p>Perguntas que mudam conforme suas respostas. Em 8 minutos você vê as áreas que mais combinam com você.</p>
+          <div class="bars-demo" aria-hidden="true">
+            <div>Tecnologia <i style="--w:92%"></i> 92%</div>
+            <div>Artes <i style="--w:84%;--c:#7A2F86"></i> 84%</div>
+            <div>Comunicação <i style="--w:61%;--c:#1B7A80"></i> 61%</div>
           </div>
         </div>
+        <div class="b-tile b-third">
+          <div class="b-icon"><i data-icon="route"></i></div>
+          <h3>Plano de carreira</h3>
+          <p>Trilha de estudos, cursos gratuitos (YouTube, Khan Academy, SENAI) e metas semanais realistas.</p>
+        </div>
+        <div class="b-tile b-third">
+          <div class="b-icon"><i data-icon="user-check"></i></div>
+          <h3>Mentores voluntários</h3>
+          <p>Profissionais formados que tiram suas dúvidas. Duas sessões gratuitas por mês.</p>
+        </div>
+        <div class="b-tile b-third">
+          <div class="b-icon"><i data-icon="video"></i></div>
+          <h3>Vídeos de profissionais</h3>
+          <p>O dia a dia, o salário e o caminho de quem já chegou lá, contado por quem vive a profissão.</p>
+        </div>
+        <div class="b-tile b-third">
+          <div class="b-icon"><i data-icon="briefcase"></i></div>
+          <h3>Vagas compatíveis</h3>
+          <p>Estágio e jovem aprendiz de empresas parceiras — só o que combina com o seu perfil.</p>
+        </div>
+        <div class="b-tile b-third">
+          <div class="b-icon"><i data-icon="phone"></i></div>
+          <h3>Lembretes no WhatsApp</h3>
+          <p>Até três mensagens por semana para te manter no ritmo das suas metas.</p>
+        </div>
+        <div class="b-tile b-third">
+          <div class="b-icon"><i data-icon="award"></i></div>
+          <h3>Gratuito, sempre</h3>
+          <p>Chat, teste, plano e mentoria básica são gratuitos para a rede pública. Sem pegadinhas.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Como funciona -->
+  <section class="lp-section" id="como-funciona" style="padding-top:0">
+    <div class="lp-wrap">
+      <div class="lp-head">
+        <div>
+          <span class="eyebrow">Como funciona</span>
+          <h2 class="lp-title">Cinco passos, <em>uma tarde</em>.</h2>
+        </div>
+      </div>
+      <div class="steps">
+        <div class="step"><h4>Crie sua conta</h4><p>Cadastro gratuito em menos de 2 minutos.</p></div>
+        <div class="step"><h4>Converse com a Voca</h4><p>Ela te conhece numa conversa descontraída.</p></div>
+        <div class="step"><h4>Faça o teste</h4><p>Teste vocacional adaptativo de 8 minutos.</p></div>
+        <div class="step"><h4>Explore carreiras</h4><p>Profissões compatíveis, vídeos e mentores.</p></div>
+        <div class="step"><h4>Receba seu plano</h4><p>Trilha personalizada com metas semanais.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Depoimentos -->
+  <section class="lp-section" id="historias" style="padding-top:0">
+    <div class="lp-wrap">
+      <div class="lp-head">
+        <div>
+          <span class="eyebrow">Histórias</span>
+          <h2 class="lp-title">Quem já <em>encontrou o caminho</em>.</h2>
+        </div>
+      </div>
+      <div class="quotes">
+        <figure class="quote">
+          <blockquote>Eu queria medicina, mas achava impossível saindo de escola pública. A Voca me mostrou o SiSU, as cotas, e um mentor formado pela UFPI me deu os melhores conselhos.</blockquote>
+          <figcaption><span class="av" data-avatar="Ana Elize"></span><div><strong>Ana Elize</strong><span>3º ano · CETI Pinheiro Machado, Teresina</span></div></figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote>Sempre gostei de computador mas não sabia que isso virava carreira aqui no Piauí. Comecei um curso gratuito da lista e já fiz meu primeiro projeto.</blockquote>
+          <figcaption><span class="av" data-avatar="Itallo Rodrigues"></span><div><strong>Itallo Rodrigues</strong><span>2º ano · Escola Estadual, Picos</span></div></figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote>Minha família queria concurso público. Depois do teste descobri meu perfil criativo — hoje sigo publicidade digital, e eles entenderam minha escolha.</blockquote>
+          <figcaption><span class="av" data-avatar="Sabrina Costa"></span><div><strong>Sabrina Costa</strong><span>3º ano · Escola Estadual, Floriano</span></div></figcaption>
+        </figure>
       </div>
     </div>
   </section>
 
   <!-- CTA -->
-  <section class="cta-section">
-    <div class="container-sm">
-      <h2>Seu futuro começa hoje</h2>
-      <p>Leva menos de 15 minutos para criar sua conta, conversar com a Voca, fazer o teste vocacional e receber as suas primeiras recomendações de carreira.</p>
-      <a href="auth/register.html" class="btn btn-accent btn-xl" style="margin-bottom:var(--space-4)">
-        Criar minha conta gratuita
-      </a>
-      <p style="font-size:var(--text-sm);color:rgba(255,255,255,0.6)">
-        Sem cartão · Sem pegadinhas · 100% para estudante público
-      </p>
+  <section class="lp-section" style="padding-top:0">
+    <div class="lp-wrap">
+      <div class="lp-cta">
+        <div class="lp-cta-text">
+          <span class="eyebrow">Seu futuro começa hoje</span>
+          <h2>Em 15 minutos você já sabe <em>por onde começar</em>.</h2>
+          <p>Crie sua conta, converse com a Voca, faça o teste e receba suas primeiras recomendações de carreira.</p>
+          <a href="auth/register.html" class="btn btn-accent btn-lg">Criar minha conta gratuita <i data-icon="arrow-right"></i></a>
+        </div>
+        <div class="lp-cta-mosaic" aria-hidden="true">
+          <span data-cover="Comunicação" data-seed="cta1"></span>
+          <span data-cover="Ciências" data-seed="cta2"></span>
+          <span data-cover="Moda" data-seed="cta3"></span>
+          <span data-cover="Turismo" data-seed="cta4"></span>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- Footer -->
-  <footer class="footer-strip">
-    <p>
-      © 2026 Vocare · Iniciativa <strong>Do Piauí Para o Mundo</strong> ·
-      CETI Professor Pinheiro Machado — Teresina, PI ·
-      <a href="auth/login.html">Entrar</a> ·
-      <a href="auth/register.html">Cadastrar</a>
-    </p>
+  <!-- Rodapé -->
+  <footer class="lp-footer">
+    <div class="lp-wrap">
+      <div class="lp-footer-grid">
+        <div>
+          <img src="./assets/logo.png" alt="Vocare" style="height:44px;margin-bottom:var(--space-3)">
+          <p style="max-width:340px">Orientação profissional gratuita para estudantes do ensino médio público. Iniciativa <strong>Do Piauí Para o Mundo</strong>.</p>
+        </div>
+        <div>
+          <h5>Plataforma</h5>
+          <a href="#carreiras">Carreiras</a>
+          <a href="#recursos">Recursos</a>
+          <a href="#como-funciona">Como funciona</a>
+        </div>
+        <div>
+          <h5>Conta</h5>
+          <a href="auth/login.html">Entrar</a>
+          <a href="auth/register.html">Criar conta</a>
+        </div>
+      </div>
+      <p class="lp-footer-bottom">© 2026 Vocare · CETI Professor Pinheiro Machado — Teresina, PI</p>
+    </div>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="js/config.js"></script>
   <script src="js/utils.js"></script>
+  <script src="js/art.js"></script>
   <script src="js/supabase.js"></script>
   <script src="js/auth.js"></script>
   <script>
+    // Borda da navegação ao rolar
+    const lpNav = document.getElementById('landingNav');
+    const onScroll = () => lpNav.classList.toggle('scrolled', window.scrollY > 8);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
     (async () => {
       const user = await Auth.init();
       if (user && Auth.profile) {
@@ -432,10 +444,10 @@
                      : role === 'admin'  ? '/admin/dashboard'
                      : '/student/dashboard';
           nav.innerHTML = `
-            <span style="color:rgba(255,255,255,0.7);font-size:var(--text-sm)">
-              Olá, ${Auth.profile.name?.split(' ')[0] || 'você'}
+            <span style="color:var(--color-muted);font-size:var(--text-sm)">
+              Olá, ${escapeHtml(Auth.profile.name?.split(' ')[0] || 'você')}
             </span>
-            <a href="${dest}" class="btn btn-accent btn-sm">Ir para o Dashboard →</a>
+            <a href="${dest}" class="btn btn-primary">Ir para o painel <i data-icon="arrow-right"></i></a>
           `;
         }
       }

@@ -245,6 +245,8 @@ function renderPlan() {
   document.getElementById('planProfessionName').textContent = profName;
   document.getElementById('planAreaBadge').textContent      = area;
   document.getElementById('planAreaIcon').innerHTML         = areaIcon(area);
+  const heroEl = document.getElementById('planHeader');
+  if (heroEl) heroEl.style.backgroundImage = `url('${Art.cover(area, profName, { glyph: 'none' })}')`;
 
   const compatEl = document.getElementById('planCompatBadge');
   if (compatEl) compatEl.innerHTML = _recScore > 0 ? compatBadge(_recScore) : '';

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard Mentor — Vocare</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/main.css">
   <link rel="stylesheet" href="../css/components.css">
   <link rel="stylesheet" href="../css/mobile.css">
@@ -144,6 +144,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="../js/config.js"></script>
   <script src="../js/utils.js"></script>
+  <script src="../js/art.js"></script>
   <script src="../js/supabase.js"></script>
   <script src="../js/auth.js"></script>
   <script>
@@ -158,8 +159,7 @@
       populateUserUI(profile);
 
       const av = document.getElementById('mentorAvatar');
-      av.textContent = initials(profile.name);
-      av.style.background = avatarGradient(profile.name);
+      av.innerHTML = Art.avatarImg(profile.name, profile.avatar_url);
     }
 
     // Load mentor data
@@ -223,7 +223,7 @@
           <div class="card session-card ${s.status}">
             <div class="card-body">
               <div class="flex items-center gap-3">
-                <div class="avatar avatar-sm" style="background:${avatarGradient(sName)};flex-shrink:0">${initials(sName)}</div>
+                <div class="avatar avatar-sm" style="background:var(--color-bg-alt);flex-shrink:0">${Art.avatarImg(sName)}</div>
                 <div class="flex-1">
                   <div class="font-semi">${escapeHtml(sName)}</div>
                   <div class="text-xs text-muted">${escapeHtml(student.school || '')} · ${timeAgo(s.created_at)}</div>

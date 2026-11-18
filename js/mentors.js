@@ -133,15 +133,13 @@ function mentorCard(mentor) {
   const city = prof.city || '';
   const hasFree = (_freeSessions[mentor.id] || 0) > 0;
   const stars = renderStars(mentor.reputation_score || 0, 10);
-  const avatarInit = initials(name);
-  const avatarBg = avatarGradient(name);
 
   return `
     <div class="card card-clickable" role="listitem" data-mentor-id="${mentor.id}">
       <div class="card-body">
         <div class="flex items-start gap-3">
-          <div class="avatar avatar-lg flex-shrink-0" style="background:${avatarBg}">
-            ${prof.avatar_url ? `<img src="${escapeHtml(prof.avatar_url)}" alt="${escapeHtml(name)}">` : escapeHtml(avatarInit)}
+          <div class="avatar avatar-lg flex-shrink-0" style="background:var(--color-bg-alt)">
+            ${Art.avatarImg(name, prof.avatar_url)}
           </div>
           <div class="flex-1 min-w-0">
             <div class="flex items-center gap-2 flex-wrap">
@@ -181,13 +179,11 @@ async function openMentorModal(mentorId) {
   const name = prof.name || 'Mentor';
   const hasFree = (_freeSessions[mentorId] || 0) > 0;
   const stars = renderStars(_selectedMentor.reputation_score || 0, 10);
-  const avatarBg = avatarGradient(name);
-
   content.innerHTML = `
     <div class="modal-header">
       <div class="flex items-center gap-3">
-        <div class="avatar avatar-md flex-shrink-0" style="background:${avatarBg}">
-          ${prof.avatar_url ? `<img src="${escapeHtml(prof.avatar_url)}" alt="${escapeHtml(name)}">` : escapeHtml(initials(name))}
+        <div class="avatar avatar-md flex-shrink-0" style="background:var(--color-bg-alt)">
+          ${Art.avatarImg(name, prof.avatar_url)}
         </div>
         <div>
           <h3 id="mentorModalTitle">${escapeHtml(name)}</h3>

@@ -3,7 +3,7 @@
    main.css · Variáveis, reset, base, tipografia, utilidades
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap');
 @import url('icons.css');
 
 /* ── Custom Properties ─────────────────────────────────────── */
@@ -29,16 +29,16 @@
   --color-info-light:     #DBEAFE;
 
   /* Neutrals */
-  --color-bg:             #F4F8FD;
-  --color-bg-alt:         #EBF2FB;
+  --color-bg:             #F6F4EF;
+  --color-bg-alt:         #EEEAE2;
   --color-card:           #FFFFFF;
-  --color-text:           #1A1A2E;
-  --color-text-soft:      #374151;
-  --color-muted:          #6B7280;
-  --color-muted-light:    #9CA3AF;
-  --color-border:         #B0C4DE;
-  --color-border-light:   #DDEAF8;
-  --color-divider:        #E5EDF7;
+  --color-text:           #16233B;
+  --color-text-soft:      #3A4456;
+  --color-muted:          #6B7080;
+  --color-muted-light:    #A3A6AE;
+  --color-border:         #D9D3C7;
+  --color-border-light:   #E7E2D8;
+  --color-divider:        #ECE7DE;
 
   /* Compatibility gradient */
   --compat-low:           #CC0000;
@@ -46,7 +46,8 @@
   --compat-high:          #2E8B57;
 
   /* Typography */
-  --font-base:            'Inter', Arial, sans-serif;
+  --font-base:            'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display:         'Fraunces', Georgia, 'Times New Roman', serif;
   --text-xs:              0.75rem;    /* 12px */
   --text-sm:              0.875rem;   /* 14px */
   --text-base:            1rem;       /* 16px */
@@ -86,13 +87,13 @@
   --radius-full: 9999px;
 
   /* Shadows */
-  --shadow-xs:  0 1px 2px 0 rgba(26,60,110,0.06);
-  --shadow-sm:  0 2px 4px 0 rgba(26,60,110,0.08);
-  --shadow-md:  0 4px 12px 0 rgba(26,60,110,0.12);
-  --shadow-lg:  0 8px 24px 0 rgba(26,60,110,0.14);
-  --shadow-xl:  0 16px 40px 0 rgba(26,60,110,0.16);
-  --shadow-card: 0 2px 8px 0 rgba(26,60,110,0.08);
-  --shadow-float: 0 8px 32px 0 rgba(26,60,110,0.18);
+  --shadow-xs:  0 1px 2px 0 rgba(22,35,59,0.05);
+  --shadow-sm:  0 1px 3px 0 rgba(22,35,59,0.06), 0 1px 2px -1px rgba(22,35,59,0.04);
+  --shadow-md:  0 6px 16px -4px rgba(22,35,59,0.10);
+  --shadow-lg:  0 16px 32px -12px rgba(22,35,59,0.18);
+  --shadow-xl:  0 28px 56px -20px rgba(22,35,59,0.24);
+  --shadow-card: 0 1px 2px 0 rgba(22,35,59,0.04), 0 4px 12px -6px rgba(22,35,59,0.08);
+  --shadow-float: 0 24px 48px -16px rgba(22,35,59,0.28);
 
   /* Transitions */
   --ease:       cubic-bezier(0.4, 0, 0.2, 1);
@@ -183,8 +184,16 @@ ul, ol {
 h1, h2, h3, h4, h5, h6 {
   font-weight: var(--fw-bold);
   line-height: 1.25;
-  color: var(--color-primary);
+  color: var(--color-text);
+  letter-spacing: -0.01em;
 }
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-optical-sizing: auto;
+  letter-spacing: -0.015em;
+}
+::selection { background: rgba(240,165,0,0.28); }
 
 h1 { font-size: var(--text-3xl); }
 h2 { font-size: var(--text-2xl); }

@@ -194,7 +194,7 @@
     const n = _filtered.length;
     bar.textContent = n === 0
       ? 'Nenhuma profissão encontrada'
-      : `${n} profissão${n !== 1 ? 'ões' : ''} encontrada${n !== 1 ? 's' : ''}`;
+      : `${n} ${n !== 1 ? 'profissões encontradas' : 'profissão encontrada'}`;
   }
 
   /* ── Renderizar grid ── */
@@ -220,8 +220,13 @@
   function _professionCardHTML(p) {
     const score   = p.compatibility_score;
     const hasScore = score !== null && score !== undefined;
-    const icon    = areaIcon(p.area);
-    const grad    = _areaGradient(p.area);
+    const sal      = p.salary_range && typeof p.salary_range === 'object' ? p.salary_range : null;
+    const salTxt   = sal ? `R$ ${_short(sal.min)} – ${_short(sal.max)} / mês` : '';
+    const OUTLOOK  = {
+      growing:   '<i data-icon="trending-up"></i> Em alta',
+      stable:    '<i data-icon="arrow-right"></i> Estável',
+      declining: '<i data-icon="trending-down"></i> Em queda',
+    };
 
     return `
       <div class="profession-grid-card" role="listitem" tabindex="0"
@@ -229,14 +234,17 @@
            aria-label="${escapeHtml(p.name || 'Profissão')}${hasScore ? ', ' + score + '% compatível' : ''}"
            onclick="window._openProfessionCard('${escapeHtml(String(p.id || ''))}')"
            onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window._openProfessionCard('${escapeHtml(String(p.id || ''))}')}">
-        <div class="profession-grid-thumb" style="background:${grad}" aria-hidden="true">
-          ${icon}
+        <div style="overflow:hidden">
+          <div class="profession-grid-thumb" style="${Art.coverStyle(p)}" aria-hidden="true">
+            ${OUTLOOK[p.market_outlook] ? `<span class="thumb-outlook">${OUTLOOK[p.market_outlook]}</span>` : ''}
+          </div>
         </div>
         <div class="profession-grid-body">
-          <div class="profession-grid-name">${escapeHtml(p.name || 'Profissão')}</div>
           <div class="profession-grid-area-badge">
-            <span class="badge badge-secondary" style="font-size:0.65rem">${escapeHtml(p.area || '')}</span>
+            <span class="badge badge-secondary">${escapeHtml(p.area || '')}</span>
           </div>
+          <div class="profession-grid-name">${escapeHtml(p.name || 'Profissão')}</div>
+          ${salTxt ? `<div class="profession-grid-salary">${salTxt}</div>` : ''}
           ${hasScore ? compatBar(score) : ''}
           ${hasScore
             ? `<div style="margin-top:var(--space-1);font-size:var(--text-xs);font-weight:var(--fw-semi);color:${_compatColor(score)}">${score}% compatível</div>`
@@ -245,7 +253,7 @@
         <div class="profession-grid-footer">
           <button class="btn btn-outline-secondary btn-block"
                   onclick="event.stopPropagation();window._openProfessionCard('${escapeHtml(String(p.id || ''))}')">
-            Ver detalhes
+            Ver detalhes <i data-icon="arrow-right"></i>
           </button>
         </div>
       </div>`;
@@ -303,8 +311,6 @@
 
   /* ── Construir HTML do modal ── */
   function _buildModalHTML(p, score, mentors) {
-    const icon  = areaIcon(p.area);
-    const grad  = _areaGradient(p.area);
     const scoreHtml = score !== null && score !== undefined
       ? `<div style="margin-top:var(--space-3)">${compatBadge(score)}</div>`
       : '';
@@ -315,10 +321,9 @@
           <h4 style="font-size:var(--text-base);font-weight:var(--fw-semi);margin-bottom:var(--space-3);color:var(--color-text)">
             Vídeos sobre esta carreira
           </h4>
-          <div style="background:${grad};border-radius:var(--radius-xl);padding:var(--space-5);text-align:center;position:relative;overflow:hidden">
-            <div style="position:absolute;inset:0;background:rgba(0,0,0,0.15)"></div>
+          <div style="${Art.coverStyle(p, { glyph: 'none' })};border-radius:var(--radius-xl);padding:var(--space-8) var(--space-5) var(--space-5);text-align:center;position:relative;overflow:hidden">
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(12,20,36,0.7),rgba(12,20,36,0.15))"></div>
             <div style="position:relative;z-index:1">
-              <div style="font-size:2.5rem;margin-bottom:var(--space-2)" aria-hidden="true">${icon}</div>
               <p style="font-size:var(--text-sm);color:rgba(255,255,255,0.9);margin-bottom:var(--space-4);font-weight:500">
                 ${escapeHtml(p.name)} no YouTube
               </p>
@@ -386,10 +391,8 @@
             ${mentors.slice(0, 4).map(m => {
               const mp = m.profile || {};
               const name = mp.name || 'Mentor';
-              const avatarHtml = mp.avatar_url
-                ? `<img src="${escapeHtml(mp.avatar_url)}" alt="${escapeHtml(name)}">`
-                : initials(name);
-              const avatarStyle = mp.avatar_url ? '' : `style="background:${avatarGradient(name)}"`;
+              const avatarHtml  = Art.avatarImg(name, mp.avatar_url);
+              const avatarStyle = '';
               return `
                 <div class="modal-mentor-item"
                      role="button" tabindex="0"
@@ -428,16 +431,13 @@
 
     return `
       <!-- Modal header -->
-      <div class="profession-modal-header">
+      <div class="profession-modal-header" style="${Art.coverStyle(p, { glyph: 'top' })}">
         <button class="profession-modal-close" onclick="window._closeModal()" aria-label="Fechar"><i data-icon="x"></i></button>
-        <div style="display:flex;align-items:center;gap:var(--space-3);margin-bottom:var(--space-3)">
-          <div style="width:52px;height:52px;border-radius:var(--radius-lg);background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:1.75rem;flex-shrink:0" aria-hidden="true">${icon}</div>
-          <div>
-            <div style="font-size:var(--text-xs);background:rgba(255,255,255,0.2);color:#fff;padding:0.2rem 0.6rem;border-radius:var(--radius-full);display:inline-block;margin-bottom:var(--space-1);font-weight:var(--fw-medium)">
-              ${escapeHtml(p.area || '')}
-            </div>
-            <h2 id="modalProfName" style="color:#fff;font-size:var(--text-xl);font-weight:var(--fw-bold)">${escapeHtml(p.name || 'Profissão')}</h2>
-          </div>
+        <div>
+          <span class="area-tag" style="font-size:var(--text-xs);color:#fff;font-weight:700;letter-spacing:0.04em">
+            ${escapeHtml(p.area || '')}
+          </span>
+          <h2 id="modalProfName" style="color:#fff;font-size:clamp(1.5rem,4vw,2rem);line-height:1.1;margin-top:var(--space-2)">${escapeHtml(p.name || 'Profissão')}</h2>
         </div>
         ${scoreHtml}
       </div>
@@ -495,14 +495,7 @@
 
     if (p && nameEl) nameEl.textContent = p.name || '';
 
-    if (avatarEl) {
-      if (p?.avatar_url) {
-        avatarEl.innerHTML = `<img src="${escapeHtml(p.avatar_url)}" alt="${escapeHtml(p.name || '')}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
-      } else if (p) {
-        avatarEl.textContent = initials(p.name);
-        avatarEl.style.background = avatarGradient(p.name);
-      }
-    }
+    if (avatarEl && p) avatarEl.innerHTML = Art.avatarImg(p.name, p.avatar_url);
 
     if (avatarEl && dropdown) {
       avatarEl.addEventListener('click', () => {
@@ -536,28 +529,6 @@
   }
 
   /* ── Helpers de formatação ── */
-  function _areaGradient(area) {
-    const map = {
-      'Tecnologia':    'linear-gradient(135deg,#1D4ED8,#3B82F6)',
-      'Saúde':         'linear-gradient(135deg,#065F46,#10B981)',
-      'Educação':      'linear-gradient(135deg,#92400E,#F59E0B)',
-      'Engenharia':    'linear-gradient(135deg,#374151,#6B7280)',
-      'Direito':       'linear-gradient(135deg,#1A3C6E,#2E6DB4)',
-      'Artes':         'linear-gradient(135deg,#6B21A8,#A855F7)',
-      'Administração': 'linear-gradient(135deg,#9D174D,#EC4899)',
-      'Comunicação':   'linear-gradient(135deg,#0F766E,#14B8A6)',
-      'Ciências':      'linear-gradient(135deg,#1E3A5F,#2563EB)',
-      'Meio Ambiente': 'linear-gradient(135deg,#14532D,#22C55E)',
-      'Agronegócio':   'linear-gradient(135deg,#3F6212,#84CC16)',
-      'Gastronomia':   'linear-gradient(135deg,#7F1D1D,#EF4444)',
-      'Segurança':     'linear-gradient(135deg,#1F2937,#4B5563)',
-      'Esportes':      'linear-gradient(135deg,#065F46,#059669)',
-      'Moda':          'linear-gradient(135deg,#831843,#DB2777)',
-      'Ciências Sociais': 'linear-gradient(135deg,#5B21B6,#8B5CF6)',
-      'Turismo':       'linear-gradient(135deg,#155E75,#06B6D4)',
-    };
-    return map[area] || 'linear-gradient(135deg,var(--color-primary),var(--color-secondary))';
-  }
 
   function _compatColor(score) {
     if (score >= 70) return 'var(--color-success)';
@@ -568,6 +539,13 @@
   function _fmt(n) {
     if (!n && n !== 0) return '—';
     return Number(n).toLocaleString('pt-BR');
+  }
+
+  // 4500 → "4,5 mil"
+  function _short(n) {
+    if (!n && n !== 0) return '—';
+    const k = Number(n) / 1000;
+    return `${k.toLocaleString('pt-BR', { maximumFractionDigits: 1 })} mil`;
   }
 
 })();

@@ -74,6 +74,7 @@
   }
 
   _renderRecommendations(recsToRender, vp);
+  _renderHeroMatch(recsToRender);
   _renderVlogs(recsToRender);
 
   _renderMentors(
@@ -107,19 +108,38 @@
     const subtitle  = document.getElementById('greetingSubtitle');
     const avatarEl  = document.getElementById('headerAvatar');
 
-    if (greeting) greeting.textContent = `Olá, ${firstName}!`;
+    const hour   = new Date().getHours();
+    const saudacao = hour < 12 ? 'Bom dia' : hour < 18 ? 'Boa tarde' : 'Boa noite';
+    if (greeting) greeting.innerHTML = `${saudacao}, <em>${escapeHtml(firstName)}</em>.`;
     if (subtitle) subtitle.textContent = p.school
-      ? `${escapeHtml(p.school)}`
-      : 'Bem-vindo ao Vocare';
+      ? `${p.school} · vamos continuar de onde você parou.`
+      : 'Vamos continuar de onde você parou.';
 
-    if (avatarEl) {
-      if (p.avatar_url) {
-        avatarEl.innerHTML = `<img src="${escapeHtml(p.avatar_url)}" alt="${escapeHtml(p.name)}">`;
-      } else {
-        avatarEl.textContent = initials(p.name);
-        avatarEl.style.background = avatarGradient(p.name);
-      }
+    const dateEl = document.getElementById('greetingDate');
+    if (dateEl) {
+      dateEl.textContent = new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
     }
+
+    if (avatarEl) avatarEl.innerHTML = Art.avatarImg(p.name, p.avatar_url);
+  }
+
+  /* ── Arte do topo: área com maior compatibilidade ── */
+  function _renderHeroMatch(recs) {
+    const art   = document.getElementById('dashHeroArt');
+    const match = document.getElementById('dashHeroMatch');
+    const top   = recs && recs[0];
+    if (!art || !match || !top?.profession) return;
+    const p = top.profession;
+    art.removeAttribute('data-cover');
+    art.style.cssText += ';' + Art.coverStyle(p, { glyph: 'top' });
+    match.innerHTML = `
+      <div style="min-width:0">
+        <small>Sua maior compatibilidade</small>
+        <strong>${escapeHtml(p.name || '')}</strong>
+      </div>
+      ${top.compatibility_score ? `<span class="dash-hero-score">${Math.round(top.compatibility_score)}%</span>` : ''}`;
+    art.style.cursor = 'pointer';
+    art.onclick = () => navigate(`professions.html?id=${encodeURIComponent(p.id || '')}`);
   }
 
   function _initTopNav(p) {
@@ -133,14 +153,7 @@
       if (nameEl)  nameEl.textContent  = p.name  || '';
       if (emailEl) emailEl.textContent = p.email || '';
 
-      if (avatarEl) {
-        if (p.avatar_url) {
-          avatarEl.innerHTML = `<img src="${escapeHtml(p.avatar_url)}" alt="${escapeHtml(p.name)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
-        } else {
-          avatarEl.textContent = initials(p.name);
-          avatarEl.style.background = avatarGradient(p.name);
-        }
-      }
+      if (avatarEl) avatarEl.innerHTML = Art.avatarImg(p.name, p.avatar_url);
     }
 
     // Toggle dropdown
@@ -202,15 +215,13 @@
     container.innerHTML = recs.map(rec => {
       const p     = rec.profession || {};
       const score = rec.compatibility_score || 0;
-      const icon  = areaIcon(p.area);
-      const grad  = _areaGradient(p.area);
       return `
         <div class="profession-scroll-card" role="button" tabindex="0"
              onclick="navigate('professions.html?id=${escapeHtml(p.id || '')}')"
              onkeydown="if(event.key==='Enter')navigate('professions.html?id=${escapeHtml(p.id || '')}')"
              aria-label="${escapeHtml(p.name || 'Profissão')}">
-          <div class="card-thumb" style="background:${grad}" aria-hidden="true">
-            ${icon}
+          <div class="card-thumb" style="${Art.coverStyle(p)}" aria-hidden="true">
+            <span class="thumb-score">${Math.round(score)}%</span>
           </div>
           <div class="card-info">
             <div class="card-name">${escapeHtml(p.name || 'Profissão')}</div>
@@ -219,7 +230,18 @@
             <div style="margin-top:var(--space-1);font-size:var(--text-xs);font-weight:var(--fw-semi);color:${_compatColor(score)}">${score}% compatível</div>
           </div>
         </div>`;
-    }).join('');
+    }).join('') + _exploreCard(recs.length, 'Explore todas as profissões', 'Compare salários, mercado e rotina de 45 carreiras.', 'professions.html');
+  }
+
+  /* ── Card "explorar mais" para completar a grade ── */
+  function _exploreCard(count, title, text, href) {
+    if (count >= 4) return '';
+    return `
+      <a class="explore-card" href="${href}">
+        <span class="explore-card-icon" aria-hidden="true"><i data-icon="arrow-right"></i></span>
+        <strong>${title}</strong>
+        <span>${text}</span>
+      </a>`;
   }
 
   /* ── Renderizar vlogs ── */
@@ -247,12 +269,6 @@
 
     container.innerHTML = items.map(rec => {
       const p    = rec.profession || {};
-      const icon = areaIcon(p.area);
-      const grad = _areaGradient(p.area);
-      const hasThumb = !!p.thumbnail_url;
-      const thumbHtml = hasThumb
-        ? `<img src="${escapeHtml(p.thumbnail_url)}" alt="${escapeHtml(p.name || '')}" loading="lazy">`
-        : `<div class="vlog-thumb-placeholder" style="background:${grad}" aria-hidden="true">${icon}</div>`;
       const target = p.vlog_url
         ? `window.open('${escapeHtml(p.vlog_url)}','_blank','noopener')`
         : `navigate('professions.html?id=${escapeHtml(p.id || '')}')`;
@@ -261,18 +277,18 @@
              onclick="${target}"
              onkeydown="if(event.key==='Enter'){${target}}"
              aria-label="Vlog: ${escapeHtml(p.name || 'Profissão')}">
-          <div class="vlog-thumb-wrap">
-            ${thumbHtml}
+          <div class="vlog-thumb-wrap" style="${Art.coverStyle(p)}">
             <div class="vlog-play-overlay" aria-hidden="true">
               <div class="vlog-play-btn"><i data-icon="play"></i></div>
             </div>
+            <span class="vlog-tag" aria-hidden="true"><i data-icon="video"></i> ${p.vlog_url ? 'YouTube' : 'Em breve'}</span>
           </div>
           <div class="vlog-info">
-            <div class="vlog-title">${escapeHtml(p.name || 'Profissão')}</div>
+            <div class="vlog-title">Um dia como ${escapeHtml(p.name || 'profissional')}</div>
             <div class="vlog-area">${escapeHtml(p.area || '')}</div>
           </div>
         </div>`;
-    }).join('');
+    }).join('') + _exploreCard(items.length, 'Mais histórias de profissionais', 'Vídeos reais de quem já trabalha na área.', 'professions.html');
   }
 
   /* ── Renderizar mentores ── */
@@ -299,16 +315,12 @@
       const profession = mentor.profession || mentor.area || '';
       const score      = mentor.reputation_score || 0;
       const isAvail    = mentor.is_available;
-      const avatarHtml = p.avatar_url
-        ? `<img src="${escapeHtml(p.avatar_url)}" alt="${escapeHtml(name)}">`
-        : `<span>${initials(name)}</span>`;
-      const avatarStyle = p.avatar_url ? '' : `style="background:${avatarGradient(name)}"`;
       return `
         <div class="mentor-scroll-card" role="button" tabindex="0"
              onclick="navigate('mentors.html?id=${escapeHtml(mentor.id || '')}')"
              onkeydown="if(event.key==='Enter')navigate('mentors.html?id=${escapeHtml(mentor.id || '')}')"
              aria-label="Mentor ${escapeHtml(name)}">
-          <div class="mentor-scroll-avatar" ${avatarStyle}>${avatarHtml}</div>
+          <div class="mentor-scroll-avatar">${Art.avatarImg(name, p.avatar_url)}</div>
           <div class="mentor-scroll-name">${escapeHtml(name)}</div>
           <div class="mentor-scroll-profession">${escapeHtml(profession)}</div>
           <div class="star-rating" style="justify-content:center;margin-bottom:var(--space-2)" aria-label="${score} de 10 estrelas">
@@ -330,14 +342,15 @@
     if (!plan) {
       container.innerHTML = `
         <div class="career-plan-card">
+          <div class="plan-art" style="background-image:url('${Art.cover('', 'plano')}')" aria-hidden="true"></div>
           <div class="career-plan-header">
-            <div class="career-plan-icon" aria-hidden="true"><i data-icon="clipboard"></i></div>
+            <div class="career-plan-icon" aria-hidden="true"><i data-icon="route"></i></div>
             <div>
-              <p style="font-weight:var(--fw-semi);color:var(--color-primary)">Crie seu plano de carreira</p>
-              <p style="font-size:var(--text-sm);color:var(--color-muted);margin:0">Personalize sua jornada rumo à profissão ideal.</p>
+              <p class="plan-title">Crie seu plano de carreira</p>
+              <p class="plan-sub">Trilha de estudos, cursos gratuitos e metas semanais.</p>
             </div>
           </div>
-          <a href="career-plan.html" class="btn btn-primary btn-block">Criar plano agora</a>
+          <a href="career-plan.html" class="btn btn-plan btn-block">Criar plano agora</a>
         </div>`;
       return;
     }
@@ -350,24 +363,23 @@
 
     container.innerHTML = `
       <div class="career-plan-card" role="region" aria-label="Plano de carreira">
+        <div class="plan-art" style="background-image:url('${Art.cover(plan.profession?.area, professionName)}')" aria-hidden="true"></div>
         <div class="career-plan-header">
-          <div class="career-plan-icon" aria-hidden="true"><i data-icon="clipboard"></i></div>
+          <div class="career-plan-icon" aria-hidden="true"><i data-icon="route"></i></div>
           <div style="flex:1;min-width:0">
-            <p style="font-weight:var(--fw-bold);color:var(--color-primary);font-size:var(--text-base);margin-bottom:2px">
-              ${escapeHtml(professionName)}
-            </p>
-            <p style="font-size:var(--text-xs);color:var(--color-muted);margin:0">
+            <p class="plan-title">${escapeHtml(professionName)}</p>
+            <p class="plan-sub">
               ${done} de ${total} meta${total !== 1 ? 's' : ''} concluída${done !== 1 ? 's' : ''}
             </p>
           </div>
-          <span class="badge badge-primary" style="font-size:var(--text-sm)">${pct}%</span>
+          <span class="plan-pct">${pct}%</span>
         </div>
         <div class="progress-labeled">
           <div class="progress" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100" aria-label="${pct}% do plano concluído">
             <div class="progress-bar" style="width:${pct}%;transition:width 0.8s var(--ease-out)"></div>
           </div>
         </div>
-        <a href="career-plan.html" class="btn btn-outline btn-block mt-3">Ver plano completo</a>
+        <a href="career-plan.html" class="btn btn-plan btn-block">Ver plano completo</a>
       </div>`;
   }
 
@@ -388,6 +400,8 @@
 
     const JOB_TYPE_LABELS = {
       internship: 'Estágio',
+      trainee:    'Trainee',
+      job:        'Emprego',
       apprentice: 'Jovem aprendiz',
       part_time:  'Meio período',
       full_time:  'Tempo integral',
@@ -401,11 +415,12 @@
       const areas     = Array.isArray(job.areas) ? job.areas : (job.area ? [job.area] : []);
       const logoHtml  = company.avatar_url
         ? `<img src="${escapeHtml(company.avatar_url)}" alt="${escapeHtml(company.name || '')}">`
-        : `<span>${areaIcon(areas[0] || '')}</span>`;
+        : escapeHtml(initials(company.name || 'Empresa'));
+      const logoBg    = (Art.AREA[areas[0]] || Art.AREA['Direito']).bg;
       return `
         <div class="job-card" role="article" aria-label="${escapeHtml(job.title || 'Vaga')}">
           <div class="job-card-header">
-            <div class="job-company-logo">${logoHtml}</div>
+            <div class="job-company-logo" style="background:${logoBg}">${logoHtml}</div>
             <div style="flex:1;min-width:0">
               <p style="font-weight:var(--fw-semi);font-size:var(--text-base);color:var(--color-text);margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
                 ${escapeHtml(job.title || 'Vaga')}
@@ -416,11 +431,10 @@
             </div>
             <span class="badge badge-secondary">${escapeHtml(typeLabel)}</span>
           </div>
-          ${areas.length > 0
-            ? `<div class="flex flex-wrap gap-2" style="margin-top:var(--space-2)">
-                ${areas.slice(0, 3).map(a => `<span class="skill-chip pending">${escapeHtml(a)}</span>`).join('')}
-              </div>`
-            : ''}
+          <div class="job-meta">
+            ${job.location ? `<span><i data-icon="map-pin"></i> ${escapeHtml(job.location)}</span>` : ''}
+            ${areas.length > 0 ? `<span><i data-icon="layers"></i> ${areas.slice(0, 3).map(escapeHtml).join(' · ')}</span>` : ''}
+          </div>
         </div>`;
     }).join('');
   }
@@ -569,28 +583,6 @@
   }
 
   /* ── Helpers ── */
-  function _areaGradient(area) {
-    const map = {
-      'Tecnologia':    'linear-gradient(135deg,#1D4ED8,#3B82F6)',
-      'Saúde':         'linear-gradient(135deg,#065F46,#10B981)',
-      'Educação':      'linear-gradient(135deg,#92400E,#F59E0B)',
-      'Engenharia':    'linear-gradient(135deg,#374151,#6B7280)',
-      'Direito':       'linear-gradient(135deg,#1A3C6E,#2E6DB4)',
-      'Artes':         'linear-gradient(135deg,#6B21A8,#A855F7)',
-      'Administração': 'linear-gradient(135deg,#9D174D,#EC4899)',
-      'Comunicação':   'linear-gradient(135deg,#0F766E,#14B8A6)',
-      'Ciências':      'linear-gradient(135deg,#1E3A5F,#2563EB)',
-      'Meio Ambiente': 'linear-gradient(135deg,#14532D,#22C55E)',
-      'Agronegócio':   'linear-gradient(135deg,#3F6212,#84CC16)',
-      'Gastronomia':   'linear-gradient(135deg,#7F1D1D,#EF4444)',
-      'Segurança':     'linear-gradient(135deg,#1F2937,#4B5563)',
-      'Esportes':      'linear-gradient(135deg,#065F46,#059669)',
-      'Moda':          'linear-gradient(135deg,#831843,#DB2777)',
-      'Ciências Sociais': 'linear-gradient(135deg,#5B21B6,#8B5CF6)',
-      'Turismo':       'linear-gradient(135deg,#155E75,#06B6D4)',
-    };
-    return map[area] || 'linear-gradient(135deg,var(--color-primary),var(--color-secondary))';
-  }
 
   function _compatColor(score) {
     if (score >= 70) return 'var(--color-success)';
