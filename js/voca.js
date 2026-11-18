@@ -28,7 +28,8 @@ let _vocProfile = null; // cached vocational profile
   // Pre-load vocational profile for action context
   try { _vocProfile = await DB.vocationalProfiles.get(Auth.userId); } catch {}
 
-  // Personalised greeting
+  // Personalised greeting (substitui o card de boas-vindas, que diria o mesmo)
+  document.getElementById('vocaWelcome')?.remove();
   const firstName = profile?.name?.split(' ')[0] || '';
   if (_vocProfile?.completed_test && _vocProfile.recommended_professions?.length) {
     const top = _vocProfile.recommended_professions[0];
