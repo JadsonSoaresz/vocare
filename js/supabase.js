@@ -162,6 +162,160 @@ const DB = {
     },
   },
 
+  /* ── Comunidade (seguir, perfis, feed) ── */
+  social: {
+    PERSON: 'id, name, avatar_url, role, school, city, state',
+
+    async getSettings(userId) {
+      const { data, error } = await _client
+        .from('social_settings').select('*').eq('user_id', userId).maybeSingle();
+      if (error) throw error;
+      return data || { user_id: userId, is_private: true, bio: null, cover_area: null };
+    },
+
+    async saveSettings(userId, settings) {
+      const { data, error } = await _client
+        .from('social_settings')
+        .upsert({ ...settings, user_id: userId }, { onConflict: 'user_id' })
+        .select().single();
+      if (error) throw error;
+      return data;
+    },
+
+    async counts(userId) {
+      const { data, error } = await _client.rpc('social_counts', { target: userId });
+      if (error) throw error;
+      return (Array.isArray(data) ? data[0] : data) || { followers: 0, following: 0, activities: 0 };
+    },
+
+    // Relação entre o usuário logado (me) e outro perfil
+    async relation(me, other) {
+      const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+      if (!UUID.test(me) || !UUID.test(other)) throw new Error('Perfil inválido.');
+      const [{ data: rows, error }, { data: blocks, error: e2 }] = await Promise.all([
+        _client.from('follows').select('*')
+          .or(`and(follower_id.eq.${me},following_id.eq.${other}),and(follower_id.eq.${other},following_id.eq.${me})`),
+        _client.from('blocks').select('*').eq('blocker_id', me).eq('blocked_id', other),
+      ]);
+      if (error) throw error;
+      if (e2) throw e2;
+      const out  = (rows || []).find(r => r.follower_id === me);
+      const inc  = (rows || []).find(r => r.follower_id === other);
+      return {
+        iFollow:     out?.status || null,   // null | 'pending' | 'accepted'
+        followsMe:   inc?.status || null,
+        iBlocked:    (blocks || []).length > 0,
+      };
+    },
+
+    async follow(me, target) {
+      const { data, error } = await _client
+        .from('follows').insert({ follower_id: me, following_id: target }).select().single();
+      if (error) throw error;
+      return data;
+    },
+    async unfollow(me, target) {
+      const { error } = await _client.from('follows').delete().eq('follower_id', me).eq('following_id', target);
+      if (error) throw error;
+    },
+    async removeFollower(me, follower) {
+      const { error } = await _client.from('follows').delete().eq('follower_id', follower).eq('following_id', me);
+      if (error) throw error;
+    },
+    async accept(me, follower) {
+      const { error } = await _client.from('follows').update({ status: 'accepted' })
+        .eq('follower_id', follower).eq('following_id', me);
+      if (error) throw error;
+    },
+    async block(me, target) {
+      const { error } = await _client.from('blocks').insert({ blocker_id: me, blocked_id: target });
+      if (error) throw error;
+    },
+    async unblock(me, target) {
+      const { error } = await _client.from('blocks').delete().eq('blocker_id', me).eq('blocked_id', target);
+      if (error) throw error;
+    },
+
+    async pendingRequests(me) {
+      const { data, error } = await _client
+        .from('follows').select(`created_at, follower:profiles!follower_id(${this.PERSON})`)
+        .eq('following_id', me).eq('status', 'pending').order('created_at', { ascending: false });
+      if (error) throw error;
+      return (data || []).map(r => ({ ...r.follower, requested_at: r.created_at })).filter(p => p.id);
+    },
+
+    async followers(userId) {
+      const { data, error } = await _client
+        .from('follows').select(`follower:profiles!follower_id(${this.PERSON})`)
+        .eq('following_id', userId).eq('status', 'accepted').order('accepted_at', { ascending: false });
+      if (error) throw error;
+      return (data || []).map(r => r.follower).filter(Boolean);
+    },
+
+    async following(userId) {
+      const { data, error } = await _client
+        .from('follows').select(`following:profiles!following_id(${this.PERSON})`)
+        .eq('follower_id', userId).eq('status', 'accepted').order('accepted_at', { ascending: false });
+      if (error) throw error;
+      return (data || []).map(r => r.following).filter(Boolean);
+    },
+
+    // Ids que o usuário segue (aceitos) ou pediu para seguir
+    async myFollowState(me) {
+      const { data, error } = await _client.from('follows').select('following_id, status').eq('follower_id', me);
+      if (error) throw error;
+      return Object.fromEntries((data || []).map(r => [r.following_id, r.status]));
+    },
+
+    async activities({ actorIds, limit = 30 }) {
+      if (!actorIds.length) return [];
+      const { data, error } = await _client
+        .from('activities')
+        .select(`*, actor:profiles!actor_id(${this.PERSON}), kudos:activity_kudos(user_id)`)
+        .in('actor_id', actorIds)
+        .order('created_at', { ascending: false })
+        .limit(limit);
+      if (error) throw error;
+      return data || [];
+    },
+
+    async kudos(activityId, me, on) {
+      const q = on
+        ? _client.from('activity_kudos').insert({ activity_id: activityId, user_id: me })
+        : _client.from('activity_kudos').delete().eq('activity_id', activityId).eq('user_id', me);
+      const { error } = await q;
+      if (error) throw error;
+    },
+
+    async search(me, term) {
+      const t = term.replace(/[%_,()]/g, ' ').trim();
+      if (t.length < 2) return [];
+      const { data, error } = await _client
+        .from('profiles').select(this.PERSON)
+        .ilike('name', `%${t}%`).neq('id', me).limit(20);
+      if (error) throw error;
+      return data || [];
+    },
+
+    // Sugestões: mesma escola, depois mesma cidade, depois mentores
+    async suggestions(me, profile, exclude = []) {
+      const skip = new Set([me, ...exclude]);
+      const pick = async (q) => { const { data } = await q.limit(12); return data || []; };
+      const base = () => _client.from('profiles').select(this.PERSON).neq('id', me);
+      const lists = await Promise.all([
+        profile?.school ? pick(base().eq('school', profile.school)) : [],
+        profile?.city   ? pick(base().eq('city', profile.city))     : [],
+        pick(base().eq('role', 'mentor')),
+      ]);
+      const out = [];
+      for (const p of lists.flat()) {
+        if (!skip.has(p.id)) { skip.add(p.id); out.push(p); }
+        if (out.length >= 6) break;
+      }
+      return out;
+    },
+  },
+
   /* ── vocational_profiles ── */
   vocationalProfiles: {
     async get(studentId) {

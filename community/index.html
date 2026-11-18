@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comunidade — Vocare</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/mobile.css">
+  <link rel="stylesheet" href="../css/community.css">
+</head>
+<body data-page="feed">
+
+  <nav class="top-nav" role="navigation" aria-label="Navegação principal">
+    <a href="#" class="nav-brand" id="cmBrand" aria-label="Vocare início">
+      <img src="../assets/logo.png" alt="Vocare" class="nav-logo">
+    </a>
+    <nav class="nav-menu-desktop cm-nav-links" id="cmNavLinks" aria-label="Menu principal"></nav>
+    <div class="nav-actions">
+      <div class="dropdown">
+        <div class="nav-avatar" id="navAvatar" role="button" tabindex="0" aria-label="Menu do usuário" aria-haspopup="true"></div>
+        <div id="navDropdown" class="dropdown-menu hidden" role="menu">
+          <div style="padding:var(--space-3) var(--space-4);border-bottom:1px solid var(--color-divider)">
+            <div id="dropdownName" style="font-weight:600;font-size:var(--text-sm)"></div>
+            <div id="dropdownEmail" style="font-size:var(--text-xs);color:var(--color-muted)"></div>
+          </div>
+          <a href="#" class="dropdown-item" id="myProfileLink" role="menuitem"><i data-icon="user"></i> Meu perfil social</a>
+          <button class="dropdown-item" data-open-settings role="menuitem"><i data-icon="shield"></i> Privacidade e perfil</button>
+          <button id="logoutBtn" class="dropdown-item danger" role="menuitem"><i data-icon="log-out"></i> Sair</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="cm-wrap">
+    <header class="cm-head">
+      <span class="eyebrow">Comunidade Vocare</span>
+      <h1>O que a sua rede <em>anda conquistando</em>.</h1>
+      <p>Testes concluídos, planos criados e metas batidas por quem você segue.</p>
+    </header>
+
+    <div class="cm-layout">
+      <main>
+        <div class="cm-search">
+          <div class="search-bar" role="search">
+            <span class="search-icon" aria-hidden="true"><i data-icon="search"></i></span>
+            <input type="search" id="peopleSearch" placeholder="Buscar pessoas pelo nome" autocomplete="off" aria-label="Buscar pessoas">
+          </div>
+          <div class="cm-search-results hidden" id="searchResults" role="listbox" aria-label="Resultados da busca"></div>
+        </div>
+
+        <div class="feed" id="feed" aria-live="polite">
+          <div class="skeleton" style="height:120px;border-radius:20px"></div>
+          <div class="skeleton" style="height:120px;border-radius:20px"></div>
+          <div class="skeleton" style="height:120px;border-radius:20px"></div>
+        </div>
+      </main>
+
+      <aside class="cm-side">
+        <section class="cm-card" id="meCard" aria-label="Seu perfil social"></section>
+        <section class="cm-card hidden" id="requestsCard" aria-label="Pedidos para seguir"></section>
+        <section class="cm-card" id="suggestCard" aria-label="Sugestões de pessoas"></section>
+      </aside>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/art.js"></script>
+  <script src="../js/supabase.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/community.js"></script>
+</body>
+</html>

@@ -95,7 +95,7 @@ Siga o guia completo em [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md).
 **Resumo:**
 1. Crie um projeto em [supabase.com](https://supabase.com)
 2. Execute `supabase/migrations/001_schema.sql` no SQL Editor
-3. Execute as demais migrations em ordem (`002_rls.sql` … `006_student_resumes.sql`)
+3. Execute as demais migrations em ordem (`002_rls.sql` … `007_social.sql`)
 4. Execute `supabase/seed.sql`
 5. Configure Google OAuth nas configurações de Auth
 6. Deploy das Edge Functions

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfil — Vocare</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/mobile.css">
+  <link rel="stylesheet" href="../css/community.css">
+</head>
+<body data-page="profile">
+
+  <nav class="top-nav" role="navigation" aria-label="Navegação principal">
+    <a href="#" class="nav-brand" id="cmBrand" aria-label="Vocare início">
+      <img src="../assets/logo.png" alt="Vocare" class="nav-logo">
+    </a>
+    <nav class="nav-menu-desktop cm-nav-links" id="cmNavLinks" aria-label="Menu principal"></nav>
+    <div class="nav-actions">
+      <div class="dropdown">
+        <div class="nav-avatar" id="navAvatar" role="button" tabindex="0" aria-label="Menu do usuário" aria-haspopup="true"></div>
+        <div id="navDropdown" class="dropdown-menu hidden" role="menu">
+          <div style="padding:var(--space-3) var(--space-4);border-bottom:1px solid var(--color-divider)">
+            <div id="dropdownName" style="font-weight:600;font-size:var(--text-sm)"></div>
+            <div id="dropdownEmail" style="font-size:var(--text-xs);color:var(--color-muted)"></div>
+          </div>
+          <a href="#" class="dropdown-item" id="myProfileLink" role="menuitem"><i data-icon="user"></i> Meu perfil social</a>
+          <button class="dropdown-item" data-open-settings role="menuitem"><i data-icon="shield"></i> Privacidade e perfil</button>
+          <button id="logoutBtn" class="dropdown-item danger" role="menuitem"><i data-icon="log-out"></i> Sair</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="cm-wrap" id="spRoot">
+    <div class="sp-cover" id="spCover" aria-hidden="true"></div>
+    <div class="sp-head">
+      <div class="sp-photo" id="spPhoto"></div>
+      <div class="sp-who">
+        <h1 id="spName">Carregando…</h1>
+        <p class="sub" id="spSub"></p>
+        <p class="sp-bio" id="spBio"></p>
+        <div class="sp-stats" id="spStats"></div>
+      </div>
+      <div class="sp-actions" id="spActions"></div>
+    </div>
+
+    <div class="tabs sp-tabs" role="tablist" id="spTabs">
+      <button class="tab-item active" role="tab" aria-selected="true" data-tab="activity"><i data-icon="award"></i> Conquistas</button>
+      <button class="tab-item" role="tab" aria-selected="false" data-tab="followers"><i data-icon="users"></i> Seguidores</button>
+      <button class="tab-item" role="tab" aria-selected="false" data-tab="following"><i data-icon="user-check"></i> Seguindo</button>
+    </div>
+    <div class="sp-body" id="spBody" aria-live="polite"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/art.js"></script>
+  <script src="../js/supabase.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/community.js"></script>
+</body>
+</html>
