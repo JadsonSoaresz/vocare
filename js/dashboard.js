@@ -30,7 +30,7 @@
 
   /* ── 3. Carregar dados em paralelo ── */
   const [recommendations, mentors, careerPlan, jobs, vocProfile, allProfessions] = await Promise.allSettled([
-    DB.recommendations.getForStudent(user.id, 8),
+    DB.recommendations.getForStudent(user.id, CONFIG.BUSINESS.TOP_RECOMMENDATIONS),
     DB.mentors.list({ available: true }),
     DB.careerPlans.get(user.id),
     DB.jobs.listForStudent(profile),
@@ -53,15 +53,18 @@
   let recsToRender;
   if (vp?.completed_test && allProfs.length > 0) {
     const freshScored = _computeFreshScores(allProfs, vp);
-    recsToRender = freshScored.slice(0, 8).map(p => ({
+    // Enxuto: só as profissões com nota mínima de confiança, no máximo TOP_RECOMMENDATIONS
+    const qualified = freshScored.filter(p => p.score >= CONFIG.BUSINESS.MIN_COMPATIBILITY_SCORE);
+    const topScored = (qualified.length > 0 ? qualified : freshScored).slice(0, CONFIG.BUSINESS.TOP_RECOMMENDATIONS);
+    recsToRender = topScored.map(p => ({
       compatibility_score: p.score,
       profession: p,
     }));
     // Persist updated scores in background (non-blocking)
-    if (freshScored.length > 0) {
+    if (topScored.length > 0) {
       DB.recommendations.save(
         user.id,
-        freshScored.slice(0, 10).map(p => ({ professionId: p.id, score: p.score }))
+        topScored.map(p => ({ professionId: p.id, score: p.score }))
       ).catch(() => {});
     }
   } else if (recs.length === 0 && vp?.completed_test) {
@@ -440,6 +443,11 @@
       'agronegócio': 'agronegócio', 'agricultura': 'agronegócio',
       'gastronomia': 'gastronomia', 'culinária': 'gastronomia',
       'meio ambiente': 'meio ambiente', 'ambiental': 'meio ambiente',
+      'ciências sociais': 'ciências sociais', 'serviço social': 'ciências sociais', 'sociologia': 'ciências sociais',
+      'turismo': 'turismo', 'hotelaria': 'turismo',
+      'esportes': 'esportes', 'educação física': 'esportes',
+      'moda': 'moda',
+      'segurança': 'segurança',
     };
     const INTEREST_MAP = {
       'computador': 'tecnologia', 'computadores': 'tecnologia', 'programação': 'tecnologia',
@@ -461,10 +469,33 @@
     function norm(area) {
       return AREA_NORMALIZE[(area || '').toLowerCase()] || (area || '').toLowerCase();
     }
-    function seededRand(seed, min, max) {
-      let h = 0;
-      for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) | 0;
-      return Math.round(min + (Math.abs(h) % 1000) / 1000 * (max - min));
+
+    // Aceita string[] legado ou {name, compatibility_score}[] retornado pela IA
+    function normalizeRecommended(list) {
+      return (list || [])
+        .map(r => {
+          if (typeof r === 'string') return { name: r, score: null };
+          const score = typeof r?.compatibility_score === 'number' ? r.compatibility_score
+                      : typeof r?.score === 'number'                ? r.score
+                      : null;
+          return { name: r?.name || r?.profession || '', score };
+        })
+        .filter(r => r.name);
+    }
+
+    // Sobreposição real entre tags da profissão e o perfil do estudante (nada de hash aleatório)
+    function tagOverlapCount(tags, interests, traits) {
+      const words = new Set(
+        [...interests, ...traits].map(w => (w || '').toLowerCase().trim()).filter(Boolean)
+      );
+      if (!tags.length || words.size === 0) return 0;
+      let count = 0;
+      for (const tag of tags) {
+        for (const w of words) {
+          if (tag.includes(w) || w.includes(tag)) { count++; break; }
+        }
+      }
+      return count;
     }
 
     const raw = vp?.raw_profile?.test || {};
@@ -475,9 +506,8 @@
       traits:                  raw.traits                  || vp?.personality_traits       || [],
     };
 
-    const topAreas         = aiProfile.top_areas.map(norm);
-    const recommendedNames = aiProfile.recommended_professions.map(r => r.toLowerCase());
-    const profileSeed      = aiProfile.interests.join('') + aiProfile.traits.join('');
+    const topAreas    = aiProfile.top_areas.map(norm);
+    const recommended = normalizeRecommended(aiProfile.recommended_professions);
 
     // Derive implied areas from interests
     const interestAreas = new Set();
@@ -496,13 +526,26 @@
       .map(prof => {
         const name = (prof.name || '').toLowerCase();
         const area = norm(prof.area);
-        const isRecommended = recommendedNames.some(r => name.includes(r) || r.includes(name));
+        const tags = Array.isArray(prof.tags) ? prof.tags.map(t => (t || '').toLowerCase()) : [];
+
+        const recMatch = recommended.find(r => {
+          const rn = r.name.toLowerCase();
+          return name === rn || name.includes(rn) || rn.includes(name);
+        });
         const areaMatch = allMatchAreas.some(a => area === a || area.includes(a) || a.includes(area));
+
         let score;
-        if (isRecommended)  score = seededRand(prof.name + profileSeed, 80, 95);
-        else if (areaMatch) score = seededRand(prof.name + profileSeed, 60, 79);
-        else                score = seededRand(prof.name, 30, 55);
-        return { ...prof, score };
+        if (recMatch) {
+          // Confia no julgamento da IA sobre a conversa inteira do estudante
+          score = recMatch.score != null ? Math.round(recMatch.score) : 82;
+        } else {
+          const overlap = tagOverlapCount(tags, aiProfile.interests, aiProfile.traits);
+          score = areaMatch
+            ? 48 + Math.min(31, overlap * 7)   // 48–79
+            : 15 + Math.min(23, overlap * 6);  // 15–38
+        }
+
+        return { ...prof, score: Math.max(1, Math.min(99, score)) };
       })
       .sort((a, b) => b.score - a.score);
   }
@@ -510,16 +553,19 @@
   /* ── Gerar recomendações sintéticas do perfil vocacional ── */
   function _buildSyntheticRecs(vp) {
     const raw = vp?.raw_profile?.test || {};
-    const names = (raw.recommended_professions || vp?.recommended_professions || []).slice(0, 8);
+    const list  = (raw.recommended_professions || vp?.recommended_professions || []).slice(0, CONFIG.BUSINESS.TOP_RECOMMENDATIONS);
     const areas = raw.top_areas || vp?.top_areas || [];
-    return names.map((name, i) => ({
-      compatibility_score: Math.max(65, 92 - i * 4),
-      profession: {
-        id:   null,
-        name: typeof name === 'string' ? name : (name?.name || 'Profissão'),
-        area: areas[0] || '',
-      },
-    }));
+    return list.map((item, i) => {
+      const isObj = item && typeof item === 'object';
+      const name  = isObj ? (item.name || 'Profissão') : item;
+      const score = isObj && typeof item.compatibility_score === 'number'
+        ? Math.round(item.compatibility_score)
+        : Math.max(60, 88 - i * 8); // fallback só quando a IA não retornou nota
+      return {
+        compatibility_score: score,
+        profession: { id: null, name, area: areas[0] || '' },
+      };
+    });
   }
 
   /* ── Helpers ── */
@@ -537,6 +583,11 @@
       'Meio Ambiente': 'linear-gradient(135deg,#14532D,#22C55E)',
       'Agronegócio':   'linear-gradient(135deg,#3F6212,#84CC16)',
       'Gastronomia':   'linear-gradient(135deg,#7F1D1D,#EF4444)',
+      'Segurança':     'linear-gradient(135deg,#1F2937,#4B5563)',
+      'Esportes':      'linear-gradient(135deg,#065F46,#059669)',
+      'Moda':          'linear-gradient(135deg,#831843,#DB2777)',
+      'Ciências Sociais': 'linear-gradient(135deg,#5B21B6,#8B5CF6)',
+      'Turismo':       'linear-gradient(135deg,#155E75,#06B6D4)',
     };
     return map[area] || 'linear-gradient(135deg,var(--color-primary),var(--color-secondary))';
   }

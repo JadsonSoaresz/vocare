@@ -69,7 +69,7 @@ async function loadExistingPlan() {
     // Load plan and recommendations in parallel
     const [existingPlan, recs] = await Promise.all([
       DB.careerPlans.get(Auth.userId),
-      DB.recommendations.getForStudent(Auth.userId, 10).catch(() => []),
+      DB.recommendations.getForStudent(Auth.userId, CONFIG.BUSINESS.TOP_RECOMMENDATIONS).catch(() => []),
     ]);
 
     _plan = existingPlan;
@@ -171,7 +171,7 @@ async function generatePlanForProfession(professionId) {
     const [profession, vocProfile, recs] = await Promise.all([
       DB.professions.get(professionId),
       DB.vocationalProfiles.get(Auth.userId).catch(() => null),
-      DB.recommendations.getForStudent(Auth.userId, 10).catch(() => []),
+      DB.recommendations.getForStudent(Auth.userId, CONFIG.BUSINESS.TOP_RECOMMENDATIONS).catch(() => []),
     ]);
 
     const rec  = recs.find(r => r.profession_id === professionId);
@@ -179,7 +179,7 @@ async function generatePlanForProfession(professionId) {
     _profession = { name: profession.name, area: profession.area || '' };
 
     // Build enriched profile for the AI — includes areas, interests, and top recs for better context
-    const topRecNames = recs.slice(0, 5).map(r => r.profession?.name).filter(Boolean);
+    const topRecNames = recs.slice(0, CONFIG.BUSINESS.TOP_RECOMMENDATIONS).map(r => r.profession?.name).filter(Boolean);
     const enrichedProfile = {
       ...(vocProfile?.raw_profile || {}),
       area:                   profession.area || '',

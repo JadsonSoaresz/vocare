@@ -515,6 +515,8 @@ const AREA_ICONS = {
   'Esportes':         '⚽',
   'Gastronomia':      '🍳',
   'Moda':             '👗',
+  'Ciências Sociais': '🤝',
+  'Turismo':          '🧳',
 };
 
 function areaIcon(area) {

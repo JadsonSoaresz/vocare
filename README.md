@@ -73,7 +73,7 @@ vocare/
 │   ├── migrations/
 │   │   ├── 001_schema.sql       # Tabelas, triggers, índices
 │   │   └── 002_rls.sql          # Políticas de segurança RLS
-│   ├── seed.sql                 # 20 profissões de exemplo
+│   ├── seed.sql                 # 45 profissões/cursos de exemplo
 │   └── functions/
 │       ├── ai-proxy/            # Proxy seguro para Claude API
 │       ├── generate-career-plan/# Gerador de planos de carreira

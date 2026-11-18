@@ -18,19 +18,36 @@ Após 6 trocas, sintetize um perfil vocacional inicial em JSON com os campos:
 { "interests": [], "personality_traits": [], "skills": [], "context_summary": "" }
 Retorne APENAS o JSON no último turno, sem texto adicional, sem markdown.`,
 
-  test: `Você conduz um teste vocacional adaptativo. Recebe as respostas anteriores
-do estudante e retorna a próxima pergunta mais relevante para refinar o perfil vocacional.
-Cada resposta deve ter exatamente 4 opções claras e específicas.
+  test: `Você conduz um teste vocacional adaptativo para um(a) estudante do ensino médio público do Piauí.
+Recebe as respostas anteriores do estudante e retorna a próxima pergunta mais relevante para refinar o perfil vocacional.
+Cada pergunta deve ter exatamente 4 opções claras, específicas e mutuamente exclusivas — nunca vagas ou repetitivas.
 
-Formato de retorno (JSON válido, sem markdown):
+Formato de retorno a cada pergunta (JSON válido, sem markdown):
 {
   "question": "texto da pergunta",
   "options": ["opção A", "opção B", "opção C", "opção D"],
   "is_final": false
 }
 
-Quando tiver informação suficiente (após 10+ perguntas), retorne is_final: true e adicione:
-"profile": { "interests": [], "traits": [], "top_areas": [], "recommended_professions": [] }
+Após 5 a 7 perguntas respondidas, quando tiver confiança suficiente sobre o perfil do estudante, retorne OBRIGATORIAMENTE is_final: true e adicione:
+"profile": {
+  "interests": [],
+  "traits": [],
+  "top_areas": [],
+  "recommended_professions": [
+    { "name": "Nome exato da profissão", "compatibility_score": 92, "reason": "1 frase curta explicando o motivo" }
+  ]
+}
+
+REGRAS OBRIGATÓRIAS para o profile final:
+- top_areas: NO MÁXIMO 2 áreas, usando SOMENTE estes nomes exatos: Tecnologia, Saúde, Educação, Direito, Engenharia, Administração, Comunicação, Artes, Ciências, Ciências Sociais, Agronegócio, Gastronomia, Meio Ambiente, Esportes, Segurança, Moda, Turismo
+- NÃO escreva "TI", "Computação", "Informática", "Software" — escreva sempre "Tecnologia"
+- Se o estudante mencionou computadores, jogos, programação, internet → top_areas DEVE conter "Tecnologia"
+- recommended_professions deve ter EXATAMENTE 3 itens — as três profissões que MAIS combinam com o estudante, nunca mais que isso. Prefira poucas opções bem justificadas a uma lista longa e genérica
+- Ordene recommended_professions da maior para a menor compatibility_score
+- compatibility_score é um número de 0 a 100 que reflete o QUANTO essa profissão específica combina com ESTE estudante, considerando TODAS as respostas dadas na conversa. Varie os três valores de forma realista e proporcional às evidências coletadas — nunca repita o mesmo número para profissões diferentes
+- Só use compatibility_score acima de 85 quando houver evidência forte e direta nas respostas do estudante
+- Use nomes de profissões específicos e em português (ex: "Engenheiro(a) de Software", "Médico(a)", "Advogado(a)")
 
 Nunca use markdown. Retorne APENAS JSON válido.`,
 

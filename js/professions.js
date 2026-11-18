@@ -550,6 +550,11 @@
       'Meio Ambiente': 'linear-gradient(135deg,#14532D,#22C55E)',
       'Agronegócio':   'linear-gradient(135deg,#3F6212,#84CC16)',
       'Gastronomia':   'linear-gradient(135deg,#7F1D1D,#EF4444)',
+      'Segurança':     'linear-gradient(135deg,#1F2937,#4B5563)',
+      'Esportes':      'linear-gradient(135deg,#065F46,#059669)',
+      'Moda':          'linear-gradient(135deg,#831843,#DB2777)',
+      'Ciências Sociais': 'linear-gradient(135deg,#5B21B6,#8B5CF6)',
+      'Turismo':       'linear-gradient(135deg,#155E75,#06B6D4)',
     };
     return map[area] || 'linear-gradient(135deg,var(--color-primary),var(--color-secondary))';
   }

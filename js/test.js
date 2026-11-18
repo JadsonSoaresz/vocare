@@ -269,8 +269,11 @@ async function _finishTest(aiProfile) {
     if (aiProfile.interests?.length)   profileUpdate.interests          = aiProfile.interests;
     if (aiProfile.traits?.length)      profileUpdate.personality_traits = aiProfile.traits;
     // top_areas e recommended_professions são salvas se a coluna existir (migration 004)
-    if (aiProfile.top_areas?.length)              profileUpdate.top_areas              = aiProfile.top_areas;
-    if (aiProfile.recommended_professions?.length) profileUpdate.recommended_professions = aiProfile.recommended_professions;
+    // A coluna é text[] — extrai só os nomes; o objeto completo (com compatibility_score)
+    // já fica preservado em raw_profile.test, usado pelo _scoreProfessions.
+    const recommendedNames = _normalizeRecommended(aiProfile.recommended_professions).map(r => r.name);
+    if (aiProfile.top_areas?.length) profileUpdate.top_areas              = aiProfile.top_areas;
+    if (recommendedNames.length)     profileUpdate.recommended_professions = recommendedNames;
 
     await DB.vocationalProfiles.upsert(_userId, profileUpdate).catch(async (e) => {
       // Fallback: colunas top_areas/recommended_professions podem não existir ainda
@@ -291,13 +294,15 @@ async function _finishTest(aiProfile) {
     // 3. Score professions
     const scored = _scoreProfessions(professions, aiProfile);
 
-    // 4. Save top-10 recommendations
+    // 4. Save top recommendations — enxuto: só profissões com nota mínima de confiança,
+    // limitado a CONFIG.BUSINESS.TOP_RECOMMENDATIONS (foco na "escolha final", não em uma lista longa)
     if (scored.length > 0) {
-      const top10 = scored.slice(0, CONFIG.BUSINESS.TOP_RECOMMENDATIONS);
+      const qualified = scored.filter(p => p.score >= CONFIG.BUSINESS.MIN_COMPATIBILITY_SCORE);
+      const topN = (qualified.length > 0 ? qualified : scored).slice(0, CONFIG.BUSINESS.TOP_RECOMMENDATIONS);
       try {
         await DB.recommendations.save(
           _userId,
-          top10.map(p => ({ professionId: p.id, score: p.score }))
+          topN.map(p => ({ professionId: p.id, score: p.score }))
         );
       } catch (e) {
         console.warn('[Test] Could not save recommendations:', e.message);
@@ -371,6 +376,11 @@ const _AREA_NORMALIZE = {
   'agronegócio': 'agronegócio', 'agricultura': 'agronegócio', 'campo': 'agronegócio',
   'gastronomia': 'gastronomia', 'culinária': 'gastronomia', 'cozinha': 'gastronomia',
   'meio ambiente': 'meio ambiente', 'ambiental': 'meio ambiente', 'natureza': 'meio ambiente',
+  'ciências sociais': 'ciências sociais', 'serviço social': 'ciências sociais', 'sociologia': 'ciências sociais',
+  'turismo': 'turismo', 'hotelaria': 'turismo',
+  'esportes': 'esportes', 'educação física': 'esportes',
+  'moda': 'moda',
+  'segurança': 'segurança',
 };
 
 const _INTEREST_AREA_MAP = {
@@ -413,11 +423,56 @@ function _interestImpliedAreas(vocProfile) {
   return [...areas];
 }
 
-/* ── Score professions ──────────────────────────────────────── */
+/* ── Normaliza recommended_professions (aceita string[] legado ou {name,compatibility_score}[]) ── */
+function _normalizeRecommended(list) {
+  return (list || [])
+    .map(r => {
+      if (typeof r === 'string') return { name: r, score: null };
+      const score = typeof r?.compatibility_score === 'number' ? r.compatibility_score
+                  : typeof r?.score === 'number'                ? r.score
+                  : null;
+      return { name: r?.name || r?.profession || '', score };
+    })
+    .filter(r => r.name);
+}
+
+/* ── Conta sobreposição real entre tags da profissão e o perfil do estudante ── */
+function _tagOverlapCount(tags, aiProfile, vocProfile) {
+  const words = new Set(
+    [
+      ...(aiProfile.interests || []),
+      ...(aiProfile.traits || []),
+      ...(vocProfile?.interests || []),
+      ...(vocProfile?.personality_traits || []),
+      ...(vocProfile?.raw_profile?.skills || []),
+    ]
+      .map(w => (w || '').toLowerCase().trim())
+      .filter(Boolean)
+  );
+
+  if (!tags.length || words.size === 0) return 0;
+
+  let count = 0;
+  for (const tag of tags) {
+    for (const w of words) {
+      if (tag.includes(w) || w.includes(tag)) { count++; break; }
+    }
+  }
+  return count;
+}
+
+/* ── Score professions ──────────────────────────────────────────
+   Precisão real em vez de ruído aleatório:
+   - Profissão indicada pela IA → usa o compatibility_score que a própria
+     IA calculou a partir de TODA a conversa (não um número inventado por hash)
+   - Profissão fora da lista mas com área compatível → nota baseada na
+     sobreposição real de tags/interesses
+   - Demais profissões → nota baixa, também baseada em sobreposição real
+──────────────────────────────────────────────────────────────── */
 function _scoreProfessions(professions, aiProfile) {
-  const topAreas         = (aiProfile.top_areas || []).map(_normalizeArea);
-  const recommendedNames = (aiProfile.recommended_professions || []).map(r => r.toLowerCase());
-  const interestAreas    = _interestImpliedAreas(_vocProfile);
+  const topAreas      = (aiProfile.top_areas || []).map(_normalizeArea);
+  const recommended   = _normalizeRecommended(aiProfile.recommended_professions);
+  const interestAreas = _interestImpliedAreas(_vocProfile);
 
   const allMatchAreas = [...new Set([...topAreas, ...interestAreas])];
 
@@ -425,40 +480,31 @@ function _scoreProfessions(professions, aiProfile) {
     .map(prof => {
       const name = (prof.name || '').toLowerCase();
       const area = _normalizeArea(prof.area);
-      let score  = 0;
+      const tags = Array.isArray(prof.tags) ? prof.tags.map(t => (t || '').toLowerCase()) : [];
 
-      const isRecommended = recommendedNames.some(r =>
-        name.includes(r) || r.includes(name)
-      );
+      const recMatch = recommended.find(r => {
+        const rn = r.name.toLowerCase();
+        return name === rn || name.includes(rn) || rn.includes(name);
+      });
+
       const areaMatch = allMatchAreas.some(a =>
         area === a || area.includes(a) || a.includes(area)
       );
 
-      // Use profile interests in seed so scores vary per student profile
-      const profileSeed = (aiProfile.interests || []).join('') + (aiProfile.traits || []).join('');
-
-      if (isRecommended) {
-        score = _seededRand(prof.name + profileSeed, 80, 95);
-      } else if (areaMatch) {
-        score = _seededRand(prof.name + profileSeed, 60, 79);
+      let score;
+      if (recMatch) {
+        // Confia no julgamento da IA sobre a conversa inteira do estudante
+        score = recMatch.score != null ? Math.round(recMatch.score) : 82;
       } else {
-        score = _seededRand(prof.name, 30, 55);
+        const overlap = _tagOverlapCount(tags, aiProfile, _vocProfile);
+        score = areaMatch
+          ? 48 + Math.min(31, overlap * 7)   // 48–79
+          : 15 + Math.min(23, overlap * 6);  // 15–38
       }
 
-      return { ...prof, score };
+      return { ...prof, score: Math.max(1, Math.min(99, score)) };
     })
     .sort((a, b) => b.score - a.score);
-}
-
-/* ── Seeded deterministic random (based on string hash) ─────── */
-function _seededRand(seed, min, max) {
-  let hash = 0;
-  const str = String(seed || '');
-  for (let i = 0; i < str.length; i++) {
-    hash = (hash * 31 + str.charCodeAt(i)) | 0;
-  }
-  const normalized = (Math.abs(hash) % 1000) / 1000; // 0..0.999
-  return Math.round(min + normalized * (max - min));
 }
 
 /* ── Mark step done ─────────────────────────────────────────── */
