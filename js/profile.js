@@ -89,7 +89,19 @@
   const EMPTY_RESUME = {
     headline: '', about: '', objective: '', looking_for: [], shift: null, available_from: null,
     education: [], experiences: [], projects: [], certifications: [], languages: [], skills: [],
-    links: {}, cover_area: null, accent_color: '#1A3C6E', is_public: false, show_contact: false,
+    links: {}, cover_area: null, accent_color: '#1A3C6E', is_public: false, visibility: 'private', show_contact: false,
+  };
+
+  // Quem pode ver o currículo (regras aplicadas no banco — migration 008)
+  const VISIBILITY = {
+    private:   { icon: 'lock',       label: 'Só eu',               badge: 'Privado',
+                 desc: 'Ninguém mais vê. Bom enquanto você ainda está montando.' },
+    companies: { icon: 'briefcase',  label: 'Empresas e mentores', badge: 'Visível para empresas',
+                 desc: 'Empresas parceiras, mentores e a equipe Vocare podem ver e te chamar para vagas.' },
+    followers: { icon: 'user-check', label: 'Seguidores',          badge: 'Visível para seguidores',
+                 desc: 'Empresas e mentores, mais quem você aprovou como seguidor na Comunidade.' },
+    everyone:  { icon: 'users',      label: 'Todos os usuários',   badge: 'Visível para todos',
+                 desc: 'Qualquer pessoa com conta na Vocare, incluindo outros estudantes.' },
   };
 
   /* ── Estado ─────────────────────────────────────────────── */
@@ -133,6 +145,8 @@
       ]);
       profile = p;
       resume  = { ...EMPTY_RESUME, ...(r || {}) };
+      // Currículos salvos antes da migration 008 só têm is_public
+      if (!r?.visibility) resume.visibility = r?.is_public ? 'companies' : 'private';
       if (vp) suggestions = [...new Set([...(vp.skills || []), ...SKILL_SUGGESTIONS])].slice(0, 14);
 
       if (!isOwner && !r) {
@@ -168,10 +182,9 @@
     $('pfHeadline').textContent = resume.headline || [profile?.school, profile?.city].filter(Boolean).join(' · ');
     const badge = $('pfVisibilityBadge');
     if (badge) {
-      badge.className = `badge owner-only ${resume.is_public ? 'badge-success' : 'badge-muted'}`;
-      badge.innerHTML = resume.is_public
-        ? '<i data-icon="eye"></i> Visível para empresas'
-        : '<i data-icon="lock"></i> Privado';
+      const v = VISIBILITY[resume.visibility] || VISIBILITY.private;
+      badge.className = `badge owner-only ${resume.visibility === 'private' ? 'badge-muted' : 'badge-success'}`;
+      badge.innerHTML = `<i data-icon="${v.icon}"></i> ${v.badge}`;
     }
     $('pfCover').style.backgroundImage = `url('${Art.cover(resume.cover_area || '', profile?.name || 'perfil', { glyph: 'none' })}')`;
     document.title = `${profile?.name || 'Perfil'} — Vocare`;
@@ -334,15 +347,19 @@
   }
 
   function sectionPrivacy() {
-    return section('privacy', 'shield', 'Visibilidade', 'Você decide quem vê o seu currículo.', `
-      <div class="pf-switch">
-        <div><strong>Mostrar meu currículo para empresas</strong>
-          <span>Empresas parceiras, mentores e a equipe Vocare poderão ver seu currículo e te chamar para vagas. Outros estudantes nunca veem.</span></div>
-        <label class="switch"><input type="checkbox" data-path="r.is_public" ${resume.is_public ? 'checked' : ''} aria-label="Currículo visível para empresas"><i></i></label>
-      </div>
-      <div class="pf-switch">
+    const options = Object.entries(VISIBILITY).map(([k, v]) => `
+      <label class="pf-radio">
+        <input type="radio" name="resumeVisibility" value="${k}" data-path="r.visibility" ${resume.visibility === k ? 'checked' : ''}>
+        <span class="pf-radio-box">
+          <i data-icon="${v.icon}"></i>
+          <span><strong>${v.label}</strong><small>${v.desc}</small></span>
+        </span>
+      </label>`).join('');
+    return section('privacy', 'shield', 'Visibilidade', 'Você decide quem vê o seu currículo. Quem você bloquear na comunidade nunca vê.', `
+      <div class="pf-radios" role="radiogroup" aria-label="Quem pode ver seu currículo">${options}</div>
+      <div class="pf-switch" style="margin-top:var(--space-4)">
         <div><strong>Mostrar e-mail e telefone no currículo</strong>
-          <span>Desligado: as empresas só veem seus links. Se você for menor de 18 anos, combine isso com seu responsável.</span></div>
+          <span>Desligado: quem vê seu currículo só vê seus links. Se você for menor de 18 anos, combine isso com seu responsável.</span></div>
         <label class="switch"><input type="checkbox" data-path="r.show_contact" ${resume.show_contact ? 'checked' : ''} aria-label="Mostrar contato no currículo"><i></i></label>
       </div>`);
   }
@@ -487,7 +504,8 @@
         links: Object.fromEntries(Object.entries(resume.links || {}).filter(([, v]) => v)),
         cover_area: resume.cover_area || null,
         accent_color: resume.accent_color,
-        is_public: !!resume.is_public,
+        visibility: resume.visibility,
+        is_public: resume.visibility !== 'private',   // o banco também deriva isso (migration 008)
         show_contact: !!resume.show_contact,
       };
 
@@ -547,7 +565,7 @@
       const url = `${location.origin}${location.pathname}?id=${profile.id}`;
       try { await navigator.clipboard.writeText(url); Toast.success('Link copiado.'); }
       catch { Toast.info(url); }
-      if (!resume.is_public) Toast.warning('Seu currículo está privado: ative "Mostrar meu currículo para empresas" para o link funcionar.');
+      if (resume.visibility === 'private') Toast.warning('Seu currículo está privado: escolha quem pode vê-lo em "Visibilidade" para o link funcionar.');
     });
     document.addEventListener('keydown', e => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') { e.preventDefault(); save(); }
@@ -578,7 +596,7 @@
       { ok: resume.experiences.length + resume.projects.length > 0, pts: 15, label: 'Mostre uma experiência ou projeto', target: 'sec-experiences' },
       { ok: resume.skills.length >= 3, pts: 10, label: 'Liste pelo menos 3 habilidades', target: 'sec-skills' },
       { ok: resume.languages.length > 0 || Object.values(resume.links || {}).some(Boolean), pts: 5, label: 'Adicione um idioma ou link', target: 'sec-languages' },
-      { ok: !!resume.is_public, pts: 5, label: 'Deixe visível para empresas', target: 'sec-privacy' },
+      { ok: resume.visibility !== 'private', pts: 5, label: 'Escolha quem pode ver seu currículo', target: 'sec-privacy' },
     ];
     const score = checks.reduce((s, c) => s + (c.ok ? c.pts : 0), 0);
     return { score, todo: checks.filter(c => !c.ok) };

@@ -399,9 +399,9 @@
       return;
     }
 
-    // "Ver currículo" quando o banco permite (empresa/mentor/admin + currículo publicado)
+    // "Ver currículo" quando o banco libera (nível de visibilidade escolhido pelo estudante — migration 008)
     let resumeBtn = '';
-    if (target.role === 'student' && ['company', 'mentor', 'admin'].includes(me.role)) {
+    if (target.role === 'student' && !rel.iBlocked) {
       try {
         const r = await DB.resumes.get(target.id);
         if (r) resumeBtn = `<a class="btn btn-outline btn-sm" href="/student/profile.html?id=${encodeURIComponent(target.id)}"><i data-icon="file-text"></i> Ver currículo</a>`;
