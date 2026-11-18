@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Empresa — Vocare</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/main.css">
   <link rel="stylesheet" href="../css/components.css">
   <link rel="stylesheet" href="../css/mobile.css">
@@ -40,7 +40,7 @@
       <div class="stat-card card">
         <div class="card-body">
           <div class="stat-icon" style="background:#D1FAE5"><i data-icon="eye"></i></div>
-          <div><div class="stat-value" id="totalViewsCount">—</div><div class="stat-label">Candidatos compatíveis</div></div>
+          <div><div class="stat-value" id="totalViewsCount">—</div><div class="stat-label">Currículos disponíveis</div></div>
         </div>
       </div>
     </div>
@@ -59,6 +59,18 @@
       <h3>Nenhuma vaga publicada</h3>
       <p>Publique vagas para encontrar candidatos compatíveis com seu perfil.</p>
       <button onclick="document.getElementById('newJobBtn').click()" class="btn btn-primary mt-4">Publicar vaga</button>
+    </div>
+
+    <!-- Talentos: currículos publicados pelos estudantes -->
+    <div class="section-header mb-3" style="margin-top:var(--space-10)">
+      <h2>Talentos</h2>
+      <label style="display:inline-flex;align-items:center;gap:var(--space-2);font-size:var(--text-sm);color:var(--color-text-soft);cursor:pointer">
+        <input type="checkbox" id="talentMatchOnly"> Só compatíveis com minhas vagas
+      </label>
+    </div>
+    <p class="text-sm text-muted mb-4">Estudantes que deixaram o currículo visível para empresas. Para conversar, use os contatos que eles escolheram exibir.</p>
+    <div id="talentList" style="display:grid;gap:var(--space-3);grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr))">
+      <div class="spinner mx-auto mt-4" aria-label="Carregando talentos"></div>
     </div>
   </main>
 
@@ -117,6 +129,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="../js/config.js"></script>
   <script src="../js/utils.js"></script>
+  <script src="../js/art.js"></script>
   <script src="../js/supabase.js"></script>
   <script src="../js/auth.js"></script>
   <script>
@@ -139,7 +152,6 @@
 
       const active = _jobs.filter(j => j.is_active);
       document.getElementById('activeJobsCount').textContent = active.length;
-      document.getElementById('totalViewsCount').textContent = active.length * 12; // mock
 
       renderJobs();
     }
@@ -225,7 +237,60 @@
       loadJobs();
     };
 
-    loadJobs();
+    /* ── Talentos ── */
+    const LOOKING = { internship: 'Estágio', apprentice: 'Jovem aprendiz', trainee: 'Trainee', part_time: 'Meio período', volunteer: 'Voluntariado', freelance: 'Freelance' };
+    let _talents = [];
+
+    async function loadTalents() {
+      try {
+        _talents = await DB.resumes.listPublished(60);
+      } catch (err) {
+        _talents = [];
+        console.warn('[Empresa] Currículos indisponíveis (rode a migration 006):', err.message);
+      }
+      document.getElementById('totalViewsCount').textContent = _talents.length;
+      renderTalents();
+    }
+
+    function renderTalents() {
+      const box = document.getElementById('talentList');
+      const onlyMatch = document.getElementById('talentMatchOnly').checked;
+      const myTypes = new Set(_jobs.filter(j => j.is_active).map(j => j.job_type));
+      const list = onlyMatch ? _talents.filter(r => (r.looking_for || []).some(t => myTypes.has(t))) : _talents;
+
+      if (!list.length) {
+        box.innerHTML = `
+          <div class="empty-state" style="grid-column:1/-1">
+            <div class="empty-state-icon"><i data-icon="users"></i></div>
+            <h3>Nenhum currículo por aqui ainda</h3>
+            <p>${onlyMatch ? 'Nenhum estudante procura o tipo de vaga que você publicou.' : 'Os currículos aparecem quando os estudantes os deixam visíveis.'}</p>
+          </div>`;
+        return;
+      }
+
+      box.innerHTML = list.map(r => {
+        const s = r.student || {};
+        const cover = Art.cover(r.cover_area || '', s.name || 'perfil', { glyph: 'none' });
+        return `
+          <article class="card" style="display:flex;flex-direction:column">
+            <div style="height:56px;background:url('${cover}') center/cover"></div>
+            <div class="card-body" style="padding-top:0;flex:1;display:flex;flex-direction:column">
+              <div style="width:64px;height:64px;border-radius:50%;overflow:hidden;border:3px solid var(--color-card);margin-top:-32px;background:var(--color-bg-alt)">${Art.avatarImg(s.name, s.avatar_url)}</div>
+              <h3 style="font-size:1.125rem;margin-top:var(--space-2)">${escapeHtml(s.name || 'Estudante')}</h3>
+              <p class="text-sm text-muted" style="margin:2px 0 var(--space-3)">${escapeHtml(r.headline || [s.school, s.city].filter(Boolean).join(' · '))}</p>
+              <div class="flex flex-wrap gap-2" style="margin-bottom:var(--space-4)">
+                ${(r.looking_for || []).map(k => `<span class="badge badge-primary">${LOOKING[k] || escapeHtml(k)}</span>`).join('')}
+                ${(r.skills || []).slice(0, 3).map(k => `<span class="badge badge-muted">${escapeHtml(k)}</span>`).join('')}
+              </div>
+              <a href="/student/profile.html?id=${encodeURIComponent(r.student_id)}" class="btn btn-outline btn-sm" style="margin-top:auto">Ver currículo <i data-icon="arrow-right"></i></a>
+            </div>
+          </article>`;
+      }).join('');
+    }
+
+    document.getElementById('talentMatchOnly').addEventListener('change', renderTalents);
+
+    loadJobs().then(loadTalents);
   })();
   </script>
 </body>

@@ -127,6 +127,41 @@ const DB = {
     },
   },
 
+  /* ── student_resumes (perfil/currículo) ── */
+  resumes: {
+    async get(studentId) {
+      const { data, error } = await _client
+        .from('student_resumes')
+        .select('*')
+        .eq('student_id', studentId)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+
+    async save(studentId, resume) {
+      const { data, error } = await _client
+        .from('student_resumes')
+        .upsert({ ...resume, student_id: studentId }, { onConflict: 'student_id' })
+        .select()
+        .single();
+      if (error) throw error;
+      return data;
+    },
+
+    // Para empresas/mentores/admin: currículos publicados (RLS filtra o resto)
+    async listPublished(limit = 50) {
+      const { data, error } = await _client
+        .from('student_resumes')
+        .select('*, student:profiles!student_id(id, name, avatar_url, city, state, school)')
+        .eq('is_public', true)
+        .order('updated_at', { ascending: false })
+        .limit(limit);
+      if (error) throw error;
+      return data || [];
+    },
+  },
+
   /* ── vocational_profiles ── */
   vocationalProfiles: {
     async get(studentId) {
@@ -572,7 +607,8 @@ const SupaStorage = {
       .upload(path, file, { upsert: true, contentType: file.type });
     if (error) throw error;
     const { data: urlData } = _client.storage.from('public').getPublicUrl(path);
-    return urlData.publicUrl;
+    // Mesmo caminho a cada troca: o ?v= evita a foto antiga em cache
+    return `${urlData.publicUrl}?v=${Date.now()}`;
   },
 };
 

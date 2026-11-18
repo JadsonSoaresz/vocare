@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu perfil — Vocare</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/mobile.css">
+  <style>
+    .pf-wrap { max-width: 1240px; margin: 0 auto; padding: 0 var(--space-4); }
+
+    /* ── Capa e identidade ── */
+    .pf-cover {
+      margin-top: var(--space-5);
+      height: 200px; border-radius: 24px; background: var(--color-primary) center / cover; position: relative; overflow: hidden;
+    }
+    .pf-cover::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(12,20,36,0.35), transparent 60%); }
+    .pf-identity { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--space-5); padding: 0 var(--space-6); margin-top: -56px; position: relative; z-index: 1; }
+    .pf-photo {
+      width: 128px; height: 128px; border-radius: 50%; overflow: hidden; flex-shrink: 0; position: relative;
+      border: 5px solid var(--color-bg); background: var(--color-bg-alt); box-shadow: var(--shadow-md);
+    }
+    .pf-photo img { width: 100%; height: 100%; object-fit: cover; }
+    .pf-photo-btn {
+      position: absolute; inset: auto 0 0 0; height: 40%; display: flex; align-items: center; justify-content: center;
+      background: rgba(12,20,36,0.6); color: #fff; font-size: 1.125rem; opacity: 0; transition: opacity 150ms ease; cursor: pointer; border: 0;
+    }
+    .pf-photo:hover .pf-photo-btn, .pf-photo-btn:focus-visible { opacity: 1; }
+    .pf-who { flex: 1; min-width: 220px; padding-top: 68px; }
+    .pf-who h1 { font-size: clamp(1.75rem, 3.5vw, 2.5rem); line-height: 1.05; letter-spacing: -0.025em; }
+    .pf-who p { color: var(--color-muted); margin: var(--space-1) 0 0; }
+    .pf-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); padding-top: 80px; }
+    @media (max-width: 720px) { .pf-actions { padding-top: 0; } .pf-who { padding-top: 0; flex-basis: 100%; } .pf-identity { padding: 0 var(--space-2); } }
+
+    /* ── Layout ── */
+    .pf-layout { display: grid; gap: var(--space-6); grid-template-columns: 1fr; margin: var(--space-8) 0 var(--space-16); }
+    @media (min-width: 1080px) { .pf-layout { grid-template-columns: minmax(0, 1fr) minmax(0, 520px); align-items: start; } }
+    .pf-aside { display: flex; flex-direction: column; gap: var(--space-4); }
+    @media (min-width: 1080px) { .pf-aside { position: sticky; top: calc(var(--nav-height) + var(--space-4)); } }
+
+    .pf-tabs { display: flex; gap: var(--space-2); margin: var(--space-6) 0 0; }
+    .pf-tabs .chip { flex: 1; justify-content: center; }
+    @media (min-width: 1080px) { .pf-tabs { display: none; } }
+    @media (max-width: 1079px) {
+      body[data-tab="edit"] .pf-aside { display: none; }
+      body[data-tab="preview"] .pf-editor { display: none; }
+    }
+
+    /* ── Editor ── */
+    .pf-editor { display: flex; flex-direction: column; gap: var(--space-4); }
+    .pf-section { background: var(--color-card); border: 1px solid var(--color-border-light); border-radius: 20px; padding: var(--space-5); }
+    .pf-section > header { display: flex; align-items: flex-start; gap: var(--space-3); margin-bottom: var(--space-4); }
+    .pf-section > header .b-icon { width: 38px; height: 38px; border-radius: 11px; background: var(--color-bg-alt); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .pf-section h2 { font-size: 1.25rem; margin: 0; }
+    .pf-section header p { color: var(--color-muted); font-size: var(--text-sm); margin: 2px 0 0; }
+    .pf-grid { display: grid; gap: var(--space-3) var(--space-4); grid-template-columns: 1fr; }
+    @media (min-width: 640px) { .pf-grid.cols-2 { grid-template-columns: 1fr 1fr; } }
+    .pf-grid .span-2 { grid-column: 1 / -1; }
+    .pf-field label { display: block; font-size: var(--text-sm); font-weight: 600; color: var(--color-text-soft); margin-bottom: 6px; }
+    .pf-field .form-control { width: 100%; }
+    .pf-field textarea.form-control { min-height: 96px; resize: vertical; }
+    .pf-hint { font-size: var(--text-xs); color: var(--color-muted); margin-top: 4px; display: flex; justify-content: space-between; }
+    .pf-check { display: inline-flex; align-items: center; gap: var(--space-2); font-size: var(--text-sm); color: var(--color-text-soft); cursor: pointer; }
+
+    .pf-item { border: 1px solid var(--color-border-light); border-radius: 16px; padding: var(--space-4); margin-bottom: var(--space-3); background: var(--color-bg); position: relative; }
+    .pf-item-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); margin-bottom: var(--space-3); }
+    .pf-item-head strong { font-size: var(--text-sm); }
+    .pf-icon-btn { width: 32px; height: 32px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; color: var(--color-muted); }
+    .pf-icon-btn:hover { background: var(--color-card); color: var(--color-danger); }
+    .pf-add { width: 100%; border: 1.5px dashed var(--color-border); border-radius: 14px; padding: var(--space-3); color: var(--color-text); font-weight: 700; font-size: var(--text-sm); display: flex; align-items: center; justify-content: center; gap: var(--space-2); }
+    .pf-add:hover { border-color: var(--color-text); background: var(--color-card); }
+
+    .pf-tags { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+    .pf-tag { display: inline-flex; align-items: center; gap: 6px; padding: 0.3rem 0.4rem 0.3rem 0.75rem; border-radius: 999px; background: var(--color-text); color: #fff; font-size: var(--text-sm); font-weight: 600; }
+    .pf-tag button { width: 20px; height: 20px; border-radius: 50%; color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 0.7rem; }
+    .pf-tag button:hover { background: rgba(255,255,255,0.2); }
+    .pf-suggest { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-3); }
+    .pf-suggest button { font-size: var(--text-xs); padding: 0.25rem 0.65rem; border-radius: 999px; border: 1px dashed var(--color-border); color: var(--color-text-soft); font-weight: 600; }
+    .pf-suggest button:hover { border-color: var(--color-text); color: var(--color-text); }
+
+    .pf-choice { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+    .pf-choice .chip[aria-pressed="true"] { background: var(--color-text); border-color: var(--color-text); color: #fff; }
+
+    .cover-options { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: var(--space-2); }
+    .cover-option { aspect-ratio: 16/10; border-radius: 12px; background: center / cover; border: 2px solid transparent; position: relative; }
+    .cover-option[aria-pressed="true"] { border-color: var(--color-text); box-shadow: 0 0 0 3px var(--color-bg), 0 0 0 5px var(--color-text); }
+    .cover-option span { position: absolute; left: 6px; bottom: 4px; font-size: 0.65rem; color: #fff; font-weight: 700; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
+    .color-options { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+    .color-option { width: 36px; height: 36px; border-radius: 50%; border: 3px solid var(--color-bg); box-shadow: 0 0 0 1px var(--color-border); }
+    .color-option[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--color-text); }
+
+    .pf-switch { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-4); padding: var(--space-3) 0; border-top: 1px solid var(--color-divider); }
+    .pf-switch:first-of-type { border-top: 0; padding-top: 0; }
+    .pf-switch strong { display: block; font-size: var(--text-sm); }
+    .pf-switch span { font-size: var(--text-xs); color: var(--color-muted); }
+    .switch { position: relative; width: 44px; height: 26px; flex-shrink: 0; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .switch i { position: absolute; inset: 0; border-radius: 999px; background: var(--color-border); transition: background 150ms ease; cursor: pointer; }
+    .switch i::after { content: ''; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: transform 150ms ease; box-shadow: var(--shadow-sm); }
+    .switch input:checked + i { background: var(--color-success); }
+    .switch input:checked + i::after { transform: translateX(18px); }
+    .switch input:focus-visible + i { outline: 2px solid var(--color-text); outline-offset: 2px; }
+
+    /* ── Completude ── */
+    .pf-meter { background: var(--color-card); border: 1px solid var(--color-border-light); border-radius: 20px; padding: var(--space-5); }
+    .pf-meter-top { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: var(--space-3); }
+    .pf-meter-top b { font-family: var(--font-display); font-size: 2rem; font-weight: 600; line-height: 1; }
+    .pf-meter .progress { height: 8px; }
+    .pf-meter .progress-bar { background: var(--color-accent); }
+    .pf-todo { margin-top: var(--space-3); display: flex; flex-direction: column; gap: 6px; }
+    .pf-todo button { text-align: left; font-size: var(--text-sm); color: var(--color-text-soft); display: flex; gap: var(--space-2); align-items: center; }
+    .pf-todo button:hover { color: var(--color-text); }
+    .pf-todo button em { margin-left: auto; font-style: normal; font-weight: 700; color: var(--color-muted); font-size: var(--text-xs); }
+
+    /* ── Folha do currículo ── */
+    .resume-sheet {
+      --accent: #1A3C6E;
+      background: #fff; color: #1d2433; border-radius: 18px; overflow: hidden;
+      box-shadow: var(--shadow-lg); border: 1px solid var(--color-border-light); font-size: 13px; line-height: 1.5;
+    }
+    .rs-band { height: 64px; background: var(--accent) center / cover; }
+    .rs-head { display: flex; gap: 16px; align-items: flex-start; padding: 0 24px; margin-top: -36px; }
+    .rs-photo { width: 84px; height: 84px; border-radius: 50%; overflow: hidden; border: 4px solid #fff; background: #eee; flex-shrink: 0; }
+    .rs-photo img { width: 100%; height: 100%; object-fit: cover; }
+    .rs-name { padding-top: 42px; min-width: 0; }
+    .rs-name h2 { font-family: var(--font-display); font-size: 24px; line-height: 1.1; color: #111827; margin: 0; overflow-wrap: anywhere; }
+    .rs-name p { color: var(--accent); font-weight: 700; margin: 2px 0 0; font-size: 13px; }
+    .rs-meta { display: flex; flex-wrap: wrap; gap: 4px 14px; padding: 12px 24px 0; color: #5b6475; font-size: 12px; }
+    .rs-meta span { display: inline-flex; align-items: center; gap: 5px; }
+    .rs-body { display: grid; grid-template-columns: 1fr; gap: 18px; padding: 18px 24px 26px; }
+    @media (min-width: 560px) { .rs-body { grid-template-columns: 1.6fr 1fr; } }
+    .rs-sec + .rs-sec { margin-top: 16px; }
+    .rs-sec h3 {
+      font-family: var(--font-base); font-size: 10.5px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--accent); margin: 0 0 8px; padding-bottom: 5px; border-bottom: 2px solid color-mix(in srgb, var(--accent) 18%, transparent);
+    }
+    .rs-sec p { margin: 0; color: #364152; white-space: pre-line; }
+    .rs-entry + .rs-entry { margin-top: 10px; }
+    .rs-entry strong { display: block; color: #111827; font-size: 13px; }
+    .rs-entry .sub { color: #5b6475; font-size: 12px; }
+    .rs-entry p { margin-top: 3px; font-size: 12.5px; }
+    .rs-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+    .rs-chips span { background: color-mix(in srgb, var(--accent) 10%, #fff); color: var(--accent); font-weight: 700; font-size: 11.5px; padding: 3px 9px; border-radius: 999px; }
+    .rs-list { display: flex; flex-direction: column; gap: 4px; }
+    .rs-list a { color: var(--accent); word-break: break-all; }
+    .rs-empty { color: #9aa1ad; font-style: italic; }
+    .rs-foot { padding: 10px 24px; border-top: 1px solid #eef0f3; font-size: 11px; color: #9aa1ad; display: flex; justify-content: space-between; }
+
+    /* ── Barra de salvar ── */
+    .pf-savebar {
+      position: fixed; left: 50%; bottom: 20px; transform: translate(-50%, 140%); z-index: var(--z-sticky);
+      display: flex; align-items: center; gap: var(--space-4); padding: 10px 10px 10px 20px;
+      background: var(--color-text); color: #fff; border-radius: 999px; box-shadow: var(--shadow-float);
+      transition: transform 250ms var(--ease); max-width: calc(100% - 32px);
+    }
+    .pf-savebar.show { transform: translate(-50%, 0); }
+    .pf-savebar span { font-size: var(--text-sm); white-space: nowrap; }
+    .pf-savebar .btn { min-height: 40px; border-radius: 999px; }
+
+    /* ── Modo visualização (empresa / link) ── */
+    body.view-mode .pf-editor, body.view-mode .pf-meter, body.view-mode .pf-tabs,
+    body.view-mode .pf-photo-btn, body.view-mode .owner-only { display: none !important; }
+    body.view-mode .pf-layout { grid-template-columns: minmax(0, 820px); justify-content: center; }
+    body.view-mode .pf-aside { position: static; }
+
+    /* ── Impressão / PDF: só a folha ── */
+    @media print {
+      @page { margin: 12mm; }
+      body { background: #fff !important; }
+      body * { visibility: hidden; }
+      .resume-sheet, .resume-sheet * { visibility: visible; }
+      .resume-sheet { position: absolute; inset: 0 0 auto 0; box-shadow: none; border: 0; border-radius: 0; }
+      .rs-body { grid-template-columns: 1.6fr 1fr !important; }
+      .rs-band, .rs-chips span { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body class="page-with-nav" data-tab="edit">
+
+  <!-- Top Nav -->
+  <nav class="top-nav" role="navigation" aria-label="Navegação principal">
+    <a href="dashboard.html" class="nav-brand" aria-label="Vocare início">
+      <img src="../assets/logo.png" alt="Vocare" class="nav-logo">
+    </a>
+    <nav class="nav-menu-desktop owner-only" aria-label="Menu principal">
+      <a href="dashboard.html" class="btn btn-ghost btn-sm"><i data-icon="home"></i> Início</a>
+      <a href="professions.html" class="btn btn-ghost btn-sm"><i data-icon="search"></i> Explorar</a>
+      <a href="mentors.html" class="btn btn-ghost btn-sm"><i data-icon="user"></i> Mentores</a>
+      <a href="voca.html" class="btn btn-ghost btn-sm"><i data-icon="message"></i> Chat IA</a>
+      <a href="career-plan.html" class="btn btn-ghost btn-sm"><i data-icon="clipboard"></i> Plano</a>
+      <a href="profile.html" class="btn btn-ghost btn-sm" style="font-weight:600;color:var(--color-primary)"><i data-icon="file-text"></i> Perfil</a>
+    </nav>
+    <div class="nav-actions">
+      <button id="backBtn" class="btn btn-ghost btn-sm hidden" onclick="history.length > 1 ? history.back() : navigate('/')"><i data-icon="arrow-right" style="transform:scaleX(-1)"></i> Voltar</button>
+      <div class="dropdown owner-only">
+        <div class="nav-avatar" id="navAvatar" role="button" tabindex="0" aria-label="Menu do usuário" aria-haspopup="true"></div>
+        <div id="navDropdown" class="dropdown-menu hidden" role="menu">
+          <div style="padding:var(--space-3) var(--space-4);border-bottom:1px solid var(--color-divider)">
+            <div id="dropdownName" style="font-weight:600;font-size:var(--text-sm)"></div>
+            <div id="dropdownEmail" style="font-size:var(--text-xs);color:var(--color-muted)"></div>
+          </div>
+          <button id="logoutBtn" class="dropdown-item danger" role="menuitem"><i data-icon="log-out"></i> Sair</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="pf-wrap">
+    <!-- Capa + identidade -->
+    <div class="pf-cover" id="pfCover" aria-hidden="true"></div>
+    <div class="pf-identity">
+      <div class="pf-photo" id="pfPhoto">
+        <button class="pf-photo-btn" id="photoBtn" type="button" aria-label="Trocar foto de perfil"><i data-icon="camera"></i></button>
+        <input type="file" id="photoInput" accept="image/png,image/jpeg,image/webp" hidden>
+      </div>
+      <div class="pf-who">
+        <span class="eyebrow" id="pfEyebrow">Perfil profissional</span>
+        <h1 id="pfName">Carregando…</h1>
+        <p id="pfHeadline"></p>
+      </div>
+      <div class="pf-actions">
+        <span class="badge owner-only" id="pfVisibilityBadge"></span>
+        <button class="btn btn-outline btn-sm" id="printBtn" type="button"><i data-icon="save"></i> Baixar PDF</button>
+        <button class="btn btn-outline btn-sm owner-only" id="copyLinkBtn" type="button"><i data-icon="link"></i> Copiar link</button>
+      </div>
+    </div>
+
+    <div class="pf-tabs" role="tablist" aria-label="Alternar entre edição e visualização">
+      <button class="chip active" data-tab="edit" role="tab" aria-selected="true"><i data-icon="wrench"></i> Editar</button>
+      <button class="chip" data-tab="preview" role="tab" aria-selected="false"><i data-icon="eye"></i> Visualizar</button>
+    </div>
+
+    <div class="pf-layout">
+      <!-- Editor (gerado pelo JS) -->
+      <form class="pf-editor" id="pfEditor" autocomplete="off" novalidate></form>
+
+      <!-- Pré-visualização + completude -->
+      <aside class="pf-aside" aria-label="Pré-visualização do currículo">
+        <div class="pf-meter" id="pfMeter"></div>
+        <article class="resume-sheet" id="resumeSheet"></article>
+      </aside>
+    </div>
+  </div>
+
+  <!-- Barra de salvar -->
+  <div class="pf-savebar owner-only" id="saveBar" role="status" aria-live="polite">
+    <span id="saveBarText">Alterações não salvas</span>
+    <button class="btn btn-accent btn-sm" id="saveBtn" type="button">Salvar</button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/art.js"></script>
+  <script src="../js/supabase.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/profile.js"></script>
+</body>
+</html>
