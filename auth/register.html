@@ -55,7 +55,7 @@
               <input type="password" id="password" name="password" class="form-control"
                 placeholder="Mínimo 8 caracteres" autocomplete="new-password" required
                 aria-describedby="pwdStrength">
-              <button type="button" id="togglePwd" class="input-icon-right" aria-label="Mostrar senha" style="background:none;border:none;cursor:pointer">👁️</button>
+              <button type="button" id="togglePwd" class="input-icon-right" aria-label="Mostrar senha" style="background:none;border:none;cursor:pointer"><i data-icon="eye"></i></button>
             </div>
             <div id="pwdStrength" class="mt-2" style="display:flex;gap:4px">
               <div class="pwd-bar" style="flex:1;height:3px;border-radius:999px;background:var(--color-border-light)"></div>
@@ -71,7 +71,7 @@
           </div>
 
           <div id="step1Error" class="alert alert-danger hidden" role="alert" style="margin-bottom:var(--space-4)">
-            <span class="alert-icon">⚠️</span>
+            <span class="alert-icon"><i data-icon="alert"></i></span>
             <span id="step1ErrorMsg"></span>
           </div>
 
@@ -113,7 +113,7 @@
           <div class="form-group">
             <label for="phone" class="form-label">WhatsApp (opcional)</label>
             <div class="input-group">
-              <span class="input-icon-left" aria-hidden="true">📱</span>
+              <span class="input-icon-left" aria-hidden="true"><i data-icon="phone"></i></span>
               <input type="tel" id="phone" name="phone" class="form-control"
                 placeholder="(86) 9 0000-0000" autocomplete="tel"
                 aria-describedby="phoneHint">
@@ -133,13 +133,12 @@
           </div>
 
           <div id="step2Error" class="alert alert-danger hidden" role="alert" style="margin-bottom:var(--space-4)">
-            <span class="alert-icon">⚠️</span>
+            <span class="alert-icon"><i data-icon="alert"></i></span>
             <span id="step2ErrorMsg"></span>
           </div>
 
           <button type="submit" id="registerBtn" class="btn btn-primary btn-block btn-lg">
-            Criar conta gratuita ✨
-          </button>
+            Criar conta gratuita          </button>
         </form>
       </div>
 
@@ -147,7 +146,7 @@
       <div id="consentModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="consentTitle">
         <div class="modal" style="border-radius:var(--radius-2xl)">
           <div class="modal-header">
-            <h3 id="consentTitle">⚠️ Consentimento do Responsável</h3>
+            <h3 id="consentTitle">Consentimento do Responsável</h3>
           </div>
           <div class="modal-body">
             <div class="consent-card">
@@ -192,7 +191,7 @@
     toggleBtn.addEventListener('click', () => {
       const isText = pwdInput.type === 'text';
       pwdInput.type = isText ? 'password' : 'text';
-      toggleBtn.textContent = isText ? '👁️' : '🙈';
+      toggleBtn.innerHTML = isText ? '<i data-icon="eye"></i>' : '<i data-icon="eye-off"></i>';
     });
 
     // Password strength indicator

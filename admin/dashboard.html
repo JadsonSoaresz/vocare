@@ -14,7 +14,7 @@
 
   <nav class="top-nav" role="navigation">
     <a href="dashboard.html" class="nav-brand">
-      <div class="brand-logo">🎯</div>
+      <div class="brand-logo"><i data-icon="target"></i></div>
       <span>Vo<em>care</em> <span class="badge badge-danger" style="margin-left:4px;font-size:10px">ADMIN</span></span>
     </a>
     <div class="nav-actions">
@@ -29,25 +29,25 @@
     <div class="grid grid-cols-2 gap-4 mb-6">
       <div class="stat-card card">
         <div class="card-body">
-          <div class="stat-icon" style="background:#EEF4FF">👩‍🎓</div>
+          <div class="stat-icon" style="background:#EEF4FF"><i data-icon="graduation-cap"></i></div>
           <div><div class="stat-value" id="totalStudents">—</div><div class="stat-label">Estudantes</div></div>
         </div>
       </div>
       <div class="stat-card card">
         <div class="card-body">
-          <div class="stat-icon" style="background:#D1FAE5">👨‍🏫</div>
+          <div class="stat-icon" style="background:#D1FAE5"><i data-icon="user-check"></i></div>
           <div><div class="stat-value" id="totalMentors">—</div><div class="stat-label">Mentores</div></div>
         </div>
       </div>
       <div class="stat-card card">
         <div class="card-body">
-          <div class="stat-icon" style="background:#FEF3C7">💬</div>
+          <div class="stat-icon" style="background:#FEF3C7"><i data-icon="message"></i></div>
           <div><div class="stat-value" id="totalSessions">—</div><div class="stat-label">Sessões</div></div>
         </div>
       </div>
       <div class="stat-card card">
         <div class="card-body">
-          <div class="stat-icon" style="background:#FEE2E2">⏳</div>
+          <div class="stat-icon" style="background:#FEE2E2"><i data-icon="hourglass"></i></div>
           <div><div class="stat-value" id="pendingMentors">—</div><div class="stat-label">Mentores pendentes</div></div>
         </div>
       </div>
@@ -55,10 +55,10 @@
 
     <!-- Tabs -->
     <div class="tabs mb-4" role="tablist">
-      <button class="tab-item active" data-tab="pending-mentors" role="tab">⏳ Aprovar Mentores</button>
-      <button class="tab-item" data-tab="all-mentors" role="tab">👨‍🏫 Todos Mentores</button>
-      <button class="tab-item" data-tab="professions" role="tab">🎯 Profissões</button>
-      <button class="tab-item" data-tab="students" role="tab">👩‍🎓 Estudantes</button>
+      <button class="tab-item active" data-tab="pending-mentors" role="tab"><i data-icon="hourglass"></i> Aprovar Mentores</button>
+      <button class="tab-item" data-tab="all-mentors" role="tab"><i data-icon="user-check"></i> Todos Mentores</button>
+      <button class="tab-item" data-tab="professions" role="tab"><i data-icon="target"></i> Profissões</button>
+      <button class="tab-item" data-tab="students" role="tab"><i data-icon="graduation-cap"></i> Estudantes</button>
     </div>
 
     <!-- Tab: Pending Mentors -->
@@ -96,7 +96,7 @@
 
   <nav class="bottom-nav" role="navigation">
     <a href="dashboard.html" class="bottom-nav-item active">
-      <span class="bottom-nav-icon">🏠</span>
+      <span class="bottom-nav-icon"><i data-icon="home"></i></span>
       <span class="bottom-nav-label">Admin</span>
     </a>
   </nav>
@@ -149,7 +149,7 @@
 
       const container = document.getElementById('pendingMentorsList');
       if (!data?.length) {
-        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">✅</div><h3>Nenhum mentor pendente</h3></div>';
+        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon"><i data-icon="check-circle"></i></div><h3>Nenhum mentor pendente</h3></div>';
         return;
       }
 
@@ -168,8 +168,8 @@
             </div>
             ${m.bio ? `<p class="text-sm text-muted mb-3" style="line-height:1.6">${escapeHtml(m.bio)}</p>` : ''}
             <div class="flex gap-2">
-              <button class="btn btn-success btn-sm flex-1" onclick="approveMentor('${m.id}')">✓ Aprovar</button>
-              <button class="btn btn-danger btn-sm flex-1" onclick="rejectMentor('${m.id}')">✕ Rejeitar</button>
+              <button class="btn btn-success btn-sm flex-1" onclick="approveMentor('${m.id}')"><i data-icon="check"></i> Aprovar</button>
+              <button class="btn btn-danger btn-sm flex-1" onclick="rejectMentor('${m.id}')"><i data-icon="x"></i> Rejeitar</button>
             </div>
           </div>
         </div>
@@ -239,7 +239,7 @@
               <div class="text-xs text-muted">${escapeHtml(m.profession||'')} · ${escapeHtml(m.area||'')}</div>
             </div>
             <div>
-              <div class="text-xs text-muted">⭐ ${m.reputation_score||0} / ${m.total_sessions||0} sessões</div>
+              <div class="text-xs text-muted"><i data-icon="star"></i> ${m.reputation_score||0} / ${m.total_sessions||0} sessões</div>
               <span class="badge ${m.is_available ? 'badge-success' : 'badge-muted'}" style="font-size:10px">${m.is_available?'Disponível':'Offline'}</span>
             </div>
           </div>

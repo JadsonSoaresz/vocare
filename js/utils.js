@@ -23,11 +23,11 @@ const Toast = (() => {
 
   function show(message, type = 'default', duration = 3500) {
     const icons = {
-      success: '✅',
-      danger:  '❌',
-      warning: '⚠️',
-      info:    'ℹ️',
-      default: '💬',
+      success: '<i data-icon="check-circle"></i>',
+      danger:  '<i data-icon="x-circle"></i>',
+      warning: '<i data-icon="alert"></i>',
+      info:    '<i data-icon="info"></i>',
+      default: '<i data-icon="info"></i>',
     };
 
     const toast = document.createElement('div');
@@ -36,7 +36,7 @@ const Toast = (() => {
     toast.innerHTML = `
       <span class="toast-icon" aria-hidden="true">${icons[type] || icons.default}</span>
       <span class="toast-msg">${escapeHtml(message)}</span>
-      <button class="toast-dismiss" aria-label="Fechar" onclick="this.closest('.toast').remove()">✕</button>
+      <button class="toast-dismiss" aria-label="Fechar" onclick="this.closest('.toast').remove()"><i data-icon="x"></i></button>
     `;
 
     getContainer().appendChild(toast);
@@ -494,33 +494,33 @@ function avatarGradient(name) {
 function renderStars(score, max = 10) {
   const stars = Math.round((score / max) * 5);
   return Array(5).fill(0).map((_, i) =>
-    `<span class="star ${i < stars ? 'filled' : 'empty'}" aria-hidden="true">${i < stars ? '★' : '☆'}</span>`
+    `<span class="star ${i < stars ? 'filled' : 'empty'}" aria-hidden="true">${i < stars ? '<i data-icon="star-fill"></i>' : '<i data-icon="star"></i>'}</span>`
   ).join('');
 }
 
 /* ── Area Icon Map ──────────────────────────────────────────── */
 const AREA_ICONS = {
-  'Tecnologia':       '💻',
-  'Saúde':            '🏥',
-  'Educação':         '📚',
-  'Engenharia':       '⚙️',
-  'Direito':          '⚖️',
-  'Artes':            '🎨',
-  'Administração':    '📊',
-  'Comunicação':      '📣',
-  'Ciências':         '🔬',
-  'Meio Ambiente':    '🌿',
-  'Segurança':        '🛡️',
-  'Agronegócio':      '🌾',
-  'Esportes':         '⚽',
-  'Gastronomia':      '🍳',
-  'Moda':             '👗',
-  'Ciências Sociais': '🤝',
-  'Turismo':          '🧳',
+  'Tecnologia':       '<i data-icon="laptop"></i>',
+  'Saúde':            '<i data-icon="heart-pulse"></i>',
+  'Educação':         '<i data-icon="book"></i>',
+  'Engenharia':       '<i data-icon="wrench"></i>',
+  'Direito':          '<i data-icon="scale"></i>',
+  'Artes':            '<i data-icon="palette"></i>',
+  'Administração':    '<i data-icon="bar-chart"></i>',
+  'Comunicação':      '<i data-icon="megaphone"></i>',
+  'Ciências':         '<i data-icon="flask"></i>',
+  'Meio Ambiente':    '<i data-icon="leaf"></i>',
+  'Segurança':        '<i data-icon="shield"></i>',
+  'Agronegócio':      '<i data-icon="sprout"></i>',
+  'Esportes':         '<i data-icon="dumbbell"></i>',
+  'Gastronomia':      '<i data-icon="chef-hat"></i>',
+  'Moda':             '<i data-icon="shirt"></i>',
+  'Ciências Sociais': '<i data-icon="users"></i>',
+  'Turismo':          '<i data-icon="plane"></i>',
 };
 
 function areaIcon(area) {
-  return AREA_ICONS[area] || '🎯';
+  return AREA_ICONS[area] || '<i data-icon="compass"></i>';
 }
 
 /* ── Error Handler ──────────────────────────────────────────── */

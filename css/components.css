@@ -1762,3 +1762,29 @@ select.form-control {
   color: var(--color-muted);
   line-height: 1.5;
 }
+
+/* ── Ícones (substituem emojis) ────────────────────────────── */
+/* Contêineres com fundo escuro: ícone/monograma em branco */
+.course-icon, .career-plan-icon, .test-completing-icon,
+.profile-creating-icon, .nav-brand .brand-logo { color: #fff; }
+.course-icon, .career-plan-icon { font-size: 1.25rem; }
+.test-completing-icon { font-size: 2.5rem; }
+
+/* Contêineres com fundo claro: ícone na cor da marca */
+.stat-card .stat-icon { color: var(--color-primary); font-size: 1.375rem; }
+.feature-icon { color: var(--color-secondary); font-size: 2rem; }
+.empty-state-icon { color: var(--color-primary); font-size: 2.5rem; }
+.voca-welcome-icon { color: var(--color-secondary); font-size: 2.5rem; }
+.alert-icon, .toast-icon { display: inline-flex; }
+
+/* Monograma da Voca no lugar do robô */
+.ai-avatar, .voca-avatar, .voca-msg-avatar {
+  color: #fff;
+  font-weight: var(--fw-xbold);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.voca-msg-avatar [data-icon] { font-size: 0.875rem; }
+
+/* Estado "em andamento" das habilidades */
+.skill-chip.progress [data-icon="loader"] { animation: icon-spin 2.4s linear infinite; }

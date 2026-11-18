@@ -4,7 +4,7 @@
 
 const SYSTEM_PROMPTS = {
   onboarding: `Você é a Voca, assistente de orientação profissional da plataforma Vocare.
-Seu tom é acolhedor, próximo e sem formalismo escolar. Use linguagem jovem, mas sem gírias excessivas.
+Seu tom é acolhedor, próximo e sem formalismo escolar. Use linguagem jovem, mas sem gírias excessivas. Não use emojis.
 Você está conversando com um(a) estudante do ensino médio da rede pública do Piauí.
 
 Seu objetivo é mapear, de forma natural e conversacional:
@@ -52,7 +52,7 @@ REGRAS OBRIGATÓRIAS para o profile final:
 Nunca use markdown. Retorne APENAS JSON válido.`,
 
   general: `Você é a Voca, assistente de orientação profissional da Vocare.
-Tom acolhedor, jovem e encorajador. Responda de forma concisa e útil.
+Tom acolhedor, jovem e encorajador. Responda de forma concisa e útil. Não use emojis.
 Foque em orientação de carreira para estudantes do ensino médio público do Piauí.`,
 };
 
@@ -126,8 +126,8 @@ async function callGemini(systemPrompt, messages, maxTokens) {
 async function callGroq(systemPrompt, messages, maxTokens, phase) {
   const complexPhases = ['onboarding', 'test'];
   const model = complexPhases.includes(phase)
-    ? 'llama-3.3-70b-versatile'   // mais capaz para tarefas complexas
-    : 'llama-3.1-8b-instant';     // mais rápido para respostas simples
+    ? 'openai/gpt-oss-120b'   // mais capaz para tarefas complexas
+    : 'openai/gpt-oss-20b';    // mais rápido para respostas simples
 
   const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
@@ -138,6 +138,7 @@ async function callGroq(systemPrompt, messages, maxTokens, phase) {
     body: JSON.stringify({
       model,
       max_tokens: Math.min(maxTokens, 2000),
+      reasoning_effort: 'low', // gpt-oss raciocina antes de responder; 'low' poupa tokens e tempo
       messages:   [{ role: 'system', content: systemPrompt }, ...messages],
     }),
   });

@@ -24,7 +24,7 @@
       <div class="dropdown">
         <button id="chatMenuBtn" class="btn btn-ghost btn-icon btn-sm" aria-label="Menu da sessão" aria-haspopup="true">⋮</button>
         <div id="chatMenu" class="dropdown-menu hidden" role="menu">
-          <button id="endSessionBtn" class="dropdown-item danger" role="menuitem">✕ Encerrar sessão</button>
+          <button id="endSessionBtn" class="dropdown-item danger" role="menuitem"><i data-icon="x"></i> Encerrar sessão</button>
         </div>
       </div>
     </header>
@@ -54,13 +54,13 @@
         ></textarea>
       </div>
       <button id="sendBtn" class="chat-send-btn" aria-label="Enviar mensagem" disabled>
-        ➤
+        <i data-icon="send"></i>
       </button>
     </footer>
 
     <!-- Session ended state -->
     <div id="sessionEndedState" class="hidden" style="padding:var(--space-6);text-align:center">
-      <div style="font-size:2.5rem;margin-bottom:var(--space-3)">✅</div>
+      <div style="font-size:2.5rem;margin-bottom:var(--space-3)"><i data-icon="check-circle"></i></div>
       <h3 style="color:var(--color-primary);margin-bottom:var(--space-2)">Sessão encerrada</h3>
       <p class="text-muted text-sm mb-4">Como foi a sessão com seu mentor?</p>
 
@@ -69,13 +69,13 @@
         <p class="font-semi text-sm mb-2">Avalie a sessão:</p>
         <div class="star-rating justify-center" id="ratingStars" role="radiogroup" aria-label="Avaliação da sessão">
           ${[1,2,3,4,5,6,7,8,9,10].map(n => `
-            <button class="star empty" data-value="${n}" role="radio" aria-checked="false" aria-label="${n} de 10">★</button>
+            <button class="star empty" data-value="${n}" role="radio" aria-checked="false" aria-label="${n} de 10"><i data-icon="star-fill"></i></button>
           `).join('')}
         </div>
       </div>
 
       <div id="aiSummaryWrap" class="card mb-4 hidden">
-        <div class="card-header"><h4>📝 Resumo da sessão</h4></div>
+        <div class="card-header"><h4>Resumo da sessão</h4></div>
         <div class="card-body">
           <p id="aiSummary" class="text-sm" style="color:var(--color-text-soft)"></p>
         </div>

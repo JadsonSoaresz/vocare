@@ -38,7 +38,7 @@ const completingOverlay = document.getElementById('completingOverlay');
       const banner = document.createElement('div');
       banner.className = 'alert alert-info';
       banner.style.cssText = 'margin:var(--space-4) var(--space-4) 0;border-radius:var(--radius-lg)';
-      banner.innerHTML = '<span class="alert-icon">🔄</span><span>Refazendo o teste — suas recomendações serão <strong>atualizadas</strong> ao final.</span>';
+      banner.innerHTML = '<span class="alert-icon"><i data-icon="refresh"></i></span><span>Refazendo o teste — suas recomendações serão <strong>atualizadas</strong> ao final.</span>';
       const main = document.querySelector('.page-content') || document.querySelector('main');
       if (main) main.prepend(banner);
     }
@@ -251,7 +251,7 @@ async function _finishTest(aiProfile) {
         if (prev) {
           prev.classList.remove('active');
           prev.classList.add('done');
-          prev.querySelector('.test-step-icon').textContent = '✅';
+          prev.querySelector('.test-step-icon').innerHTML = '<i data-icon="check-circle"></i>';
         }
       }
     }, stepDelays[i]);
@@ -514,7 +514,7 @@ function _markStepDone(id) {
   el.classList.remove('active');
   el.classList.add('done');
   const icon = el.querySelector('.test-step-icon');
-  if (icon) icon.textContent = '✅';
+  if (icon) icon.innerHTML = '<i data-icon="check-circle"></i>';
 }
 
 /* ── Show/hide thinking overlay ─────────────────────────────── */

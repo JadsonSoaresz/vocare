@@ -21,7 +21,7 @@
 
       <!-- Reset password notice -->
       <div id="resetNotice" class="alert alert-success hidden" role="alert" style="margin-bottom:var(--space-4)">
-        <span class="alert-icon">✅</span>
+        <span class="alert-icon"><i data-icon="check-circle"></i></span>
         <span>Verifique seu e-mail para redefinir a senha.</span>
       </div>
 
@@ -30,7 +30,7 @@
         <div class="form-group">
           <label for="email" class="form-label">E-mail</label>
           <div class="input-group">
-            <span class="input-icon-left" aria-hidden="true">✉️</span>
+            <span class="input-icon-left" aria-hidden="true"><i data-icon="mail"></i></span>
             <input
               type="email"
               id="email"
@@ -52,7 +52,7 @@
             </button>
           </div>
           <div class="input-group">
-            <span class="input-icon-left" aria-hidden="true">🔒</span>
+            <span class="input-icon-left" aria-hidden="true"><i data-icon="lock"></i></span>
             <input
               type="password"
               id="password"
@@ -63,12 +63,12 @@
               required
               aria-required="true"
             >
-            <button type="button" id="togglePwd" class="input-icon-right" aria-label="Mostrar senha" style="background:none;border:none;cursor:pointer">👁️</button>
+            <button type="button" id="togglePwd" class="input-icon-right" aria-label="Mostrar senha" style="background:none;border:none;cursor:pointer"><i data-icon="eye"></i></button>
           </div>
         </div>
 
         <div id="loginError" class="alert alert-danger hidden" role="alert" style="margin-bottom:var(--space-4)">
-          <span class="alert-icon">⚠️</span>
+          <span class="alert-icon"><i data-icon="alert"></i></span>
           <span id="loginErrorMsg"></span>
         </div>
 
@@ -102,7 +102,7 @@
       <div class="modal" style="border-radius:var(--radius-2xl)">
         <div class="modal-header">
           <h3 id="forgotTitle">Recuperar senha</h3>
-          <button class="modal-close" onclick="closeModal('forgotModal')" aria-label="Fechar">✕</button>
+          <button class="modal-close" onclick="closeModal('forgotModal')" aria-label="Fechar"><i data-icon="x"></i></button>
         </div>
         <div class="modal-body">
           <p style="color:var(--color-muted);font-size:var(--text-sm);margin-bottom:var(--space-4)">
@@ -113,7 +113,7 @@
             <input type="email" id="resetEmail" class="form-control" placeholder="seu@email.com">
           </div>
           <div id="forgotError" class="alert alert-danger hidden" role="alert">
-            <span class="alert-icon">⚠️</span>
+            <span class="alert-icon"><i data-icon="alert"></i></span>
             <span id="forgotErrorMsg"></span>
           </div>
         </div>
@@ -147,7 +147,7 @@
     toggleBtn.addEventListener('click', () => {
       const isText = pwdInput.type === 'text';
       pwdInput.type = isText ? 'password' : 'text';
-      toggleBtn.textContent = isText ? '👁️' : '🙈';
+      toggleBtn.innerHTML = isText ? '<i data-icon="eye"></i>' : '<i data-icon="eye-off"></i>';
       toggleBtn.setAttribute('aria-label', isText ? 'Mostrar senha' : 'Ocultar senha');
     });
 

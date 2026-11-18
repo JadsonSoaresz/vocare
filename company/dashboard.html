@@ -14,7 +14,7 @@
 
   <nav class="top-nav" role="navigation">
     <a href="dashboard.html" class="nav-brand">
-      <div class="brand-logo">🎯</div>
+      <div class="brand-logo"><i data-icon="target"></i></div>
       <span>Vo<em>care</em></span>
     </a>
     <div class="nav-actions">
@@ -25,7 +25,7 @@
 
   <main class="page-content" aria-live="polite">
     <div class="section-header mb-6">
-      <h1 style="font-size:var(--text-xl)">💼 Painel da Empresa</h1>
+      <h1 style="font-size:var(--text-xl)">Painel da Empresa</h1>
       <button id="newJobBtn" class="btn btn-primary btn-sm">+ Nova vaga</button>
     </div>
 
@@ -33,13 +33,13 @@
     <div class="grid grid-cols-2 gap-4 mb-6">
       <div class="stat-card card">
         <div class="card-body">
-          <div class="stat-icon" style="background:#EEF4FF">💼</div>
+          <div class="stat-icon" style="background:#EEF4FF"><i data-icon="briefcase"></i></div>
           <div><div class="stat-value" id="activeJobsCount">—</div><div class="stat-label">Vagas ativas</div></div>
         </div>
       </div>
       <div class="stat-card card">
         <div class="card-body">
-          <div class="stat-icon" style="background:#D1FAE5">👀</div>
+          <div class="stat-icon" style="background:#D1FAE5"><i data-icon="eye"></i></div>
           <div><div class="stat-value" id="totalViewsCount">—</div><div class="stat-label">Candidatos compatíveis</div></div>
         </div>
       </div>
@@ -55,7 +55,7 @@
     </div>
 
     <div id="jobsEmpty" class="empty-state hidden">
-      <div class="empty-state-icon">💼</div>
+      <div class="empty-state-icon"><i data-icon="briefcase"></i></div>
       <h3>Nenhuma vaga publicada</h3>
       <p>Publique vagas para encontrar candidatos compatíveis com seu perfil.</p>
       <button onclick="document.getElementById('newJobBtn').click()" class="btn btn-primary mt-4">Publicar vaga</button>
@@ -67,7 +67,7 @@
     <div class="modal" style="border-radius:var(--radius-2xl)">
       <div class="modal-header">
         <h3 id="jobModalTitle">Nova vaga</h3>
-        <button class="modal-close" onclick="closeModal('jobModal')" aria-label="Fechar">✕</button>
+        <button class="modal-close" onclick="closeModal('jobModal')" aria-label="Fechar"><i data-icon="x"></i></button>
       </div>
       <div class="modal-body">
         <form id="jobForm" novalidate>
@@ -109,7 +109,7 @@
 
   <nav class="bottom-nav" role="navigation">
     <a href="dashboard.html" class="bottom-nav-item active">
-      <span class="bottom-nav-icon">🏠</span>
+      <span class="bottom-nav-icon"><i data-icon="home"></i></span>
       <span class="bottom-nav-label">Início</span>
     </a>
   </nav>
@@ -165,16 +165,16 @@
                 <h3 class="font-semi" style="font-size:var(--text-base)">${escapeHtml(job.title)}</h3>
                 <div class="flex items-center gap-2 mt-2 flex-wrap">
                   <span class="badge badge-secondary">${typeLabels[job.type] || job.type}</span>
-                  ${job.location ? `<span class="badge badge-muted">📍 ${escapeHtml(job.location)}</span>` : ''}
+                  ${job.location ? `<span class="badge badge-muted"><i data-icon="map-pin"></i> ${escapeHtml(job.location)}</span>` : ''}
                   <span class="badge ${job.is_active ? 'badge-success' : 'badge-muted'}">${job.is_active ? 'Ativa' : 'Inativa'}</span>
                 </div>
                 <p class="text-xs text-muted mt-2">Compat. mínima: ${job.min_compatibility}% · Criada ${timeAgo(job.created_at)}</p>
               </div>
               <div class="flex flex-col gap-2">
                 <button class="btn btn-ghost btn-sm btn-icon" onclick="toggleJob('${job.id}', ${!job.is_active})" aria-label="${job.is_active ? 'Desativar' : 'Ativar'} vaga">
-                  ${job.is_active ? '⏸' : '▶'}
+                  ${job.is_active ? '<i data-icon="pause"></i>' : '<i data-icon="play"></i>'}
                 </button>
-                <button class="btn btn-danger btn-sm btn-icon" onclick="deleteJob('${job.id}')" aria-label="Excluir vaga">🗑</button>
+                <button class="btn btn-danger btn-sm btn-icon" onclick="deleteJob('${job.id}')" aria-label="Excluir vaga"><i data-icon="trash"></i></button>
               </div>
             </div>
           </div>

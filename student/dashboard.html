@@ -305,16 +305,16 @@
       <img src="../assets/logo.png" alt="Vocare" class="nav-logo">
     </a>
         <nav class="nav-menu-desktop" aria-label="Menu principal">
-      <a href="dashboard.html" class="btn btn-ghost btn-sm" style="font-weight:600;color:var(--color-primary)">🏠 Início</a>
-      <a href="professions.html" class="btn btn-ghost btn-sm">🔍 Explorar</a>
-      <a href="mentors.html" class="btn btn-ghost btn-sm">👤 Mentores</a>
-      <a href="voca.html" class="btn btn-ghost btn-sm">💬 Chat IA</a>
-      <a href="career-plan.html" class="btn btn-ghost btn-sm">📋 Plano</a>
-      <a href="test.html" class="btn btn-ghost btn-sm">🎯 Refazer Teste</a>
+      <a href="dashboard.html" class="btn btn-ghost btn-sm" style="font-weight:600;color:var(--color-primary)"><i data-icon="home"></i> Início</a>
+      <a href="professions.html" class="btn btn-ghost btn-sm"><i data-icon="search"></i> Explorar</a>
+      <a href="mentors.html" class="btn btn-ghost btn-sm"><i data-icon="user"></i> Mentores</a>
+      <a href="voca.html" class="btn btn-ghost btn-sm"><i data-icon="message"></i> Chat IA</a>
+      <a href="career-plan.html" class="btn btn-ghost btn-sm"><i data-icon="clipboard"></i> Plano</a>
+      <a href="test.html" class="btn btn-ghost btn-sm"><i data-icon="target"></i> Refazer Teste</a>
     </nav>
     <div class="nav-actions">
       <button id="notifBtn" class="btn btn-ghost btn-icon" aria-label="Notificações" style="position:relative">
-        🔔
+        <i data-icon="bell"></i>
         <span id="notifBadge" class="hidden" style="position:absolute;top:6px;right:6px;width:8px;height:8px;background:var(--color-accent);border-radius:50%"></span>
       </button>
       <div class="dropdown" style="position:relative">
@@ -325,11 +325,11 @@
             <p id="dropdownEmail" style="font-size:var(--text-xs);color:var(--color-muted)"></p>
           </div>
           <button class="dropdown-item" onclick="navigate('../student/career-plan.html')">
-            📋 Meu plano de carreira
+            <i data-icon="clipboard"></i> Meu plano de carreira
           </button>
           <div class="dropdown-divider"></div>
           <button id="logoutBtn" class="dropdown-item danger">
-            🚪 Sair
+            <i data-icon="log-out"></i> Sair
           </button>
         </div>
       </div>
@@ -340,7 +340,7 @@
   <header class="dashboard-header" id="dashHeader">
     <div class="dashboard-header-content">
       <div class="dashboard-greeting">
-        <h1 id="greetingText">Olá! 👋</h1>
+        <h1 id="greetingText">Olá!</h1>
         <p id="greetingSubtitle">Bem-vindo ao Vocare</p>
       </div>
       <div class="dashboard-avatar-wrap">
@@ -355,9 +355,9 @@
     <!-- ── Para Você ── -->
     <section class="dashboard-section" aria-labelledby="secRecommended">
       <div class="section-header">
-        <h2 id="secRecommended">🎯 Para você</h2>
+        <h2 id="secRecommended">Para você</h2>
         <div style="display:flex;align-items:center;gap:var(--space-3)">
-          <a href="test.html" id="retakeTestLink" style="font-size:var(--text-xs);color:var(--color-muted);font-weight:var(--fw-medium);display:none">🔄 Refazer teste</a>
+          <a href="test.html" id="retakeTestLink" style="font-size:var(--text-xs);color:var(--color-muted);font-weight:var(--fw-medium);display:none"><i data-icon="refresh"></i> Refazer teste</a>
           <a href="professions.html" style="font-size:var(--text-sm);color:var(--color-secondary);font-weight:var(--fw-medium)">Ver tudo</a>
         </div>
       </div>
@@ -372,7 +372,7 @@
     <!-- ── Vlogs Recomendados ── -->
     <section class="dashboard-section" aria-labelledby="secVlogs">
       <div class="section-header">
-        <h2 id="secVlogs">🎬 Vlogs recomendados</h2>
+        <h2 id="secVlogs">Vlogs recomendados</h2>
         <a href="professions.html" style="font-size:var(--text-sm);color:var(--color-secondary);font-weight:var(--fw-medium)">Explorar</a>
       </div>
       <div id="vlogsScroll" class="scroll-x" aria-label="Vlogs recomendados">
@@ -384,7 +384,7 @@
     <!-- ── Mentores Disponíveis ── -->
     <section class="dashboard-section" aria-labelledby="secMentors">
       <div class="section-header">
-        <h2 id="secMentors">👤 Mentores disponíveis</h2>
+        <h2 id="secMentors">Mentores disponíveis</h2>
         <a href="mentors.html" style="font-size:var(--text-sm);color:var(--color-secondary);font-weight:var(--fw-medium)">Ver todos</a>
       </div>
       <div id="mentorsScroll" class="scroll-x" aria-label="Mentores disponíveis">
@@ -397,7 +397,7 @@
     <!-- ── Plano de Carreira ── -->
     <section class="dashboard-section" aria-labelledby="secCareerPlan">
       <div class="section-header">
-        <h2 id="secCareerPlan">📋 Meu plano de carreira</h2>
+        <h2 id="secCareerPlan">Meu plano de carreira</h2>
       </div>
       <div id="careerPlanArea">
         <div class="skeleton" style="height:120px;border-radius:var(--radius-xl)"></div>
@@ -407,7 +407,7 @@
     <!-- ── Vagas ── -->
     <section class="dashboard-section" aria-labelledby="secJobs">
       <div class="section-header">
-        <h2 id="secJobs">💼 Vagas para você</h2>
+        <h2 id="secJobs">Vagas para você</h2>
       </div>
       <div id="jobsArea">
         <div class="skeleton" style="height:90px;border-radius:var(--radius-xl);margin-bottom:var(--space-3)"></div>

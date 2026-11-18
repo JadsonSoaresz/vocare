@@ -74,7 +74,7 @@ const profileMsg     = document.getElementById('profileCreatingMsg');
 
 /* ── Welcome message (from AI, no API call needed) ─────────── */
 async function _showWelcomeMessage() {
-  const welcome = 'Oi! Sou a Voca 👋 Fico feliz que você esteja aqui! Antes de te mostrar as carreiras que combinam com você, quero te conhecer melhor. Me conta: o que você mais gosta de fazer no seu tempo livre? 😊';
+  const welcome = 'Oi! Sou a Voca. Fico feliz que você esteja aqui! Antes de te mostrar as carreiras que combinam com você, quero te conhecer melhor. Me conta: o que você mais gosta de fazer no seu tempo livre?';
 
   // Inject welcome into AI messages array
   OnboardingAI.messages = [{ role: 'assistant', content: welcome }];
@@ -152,7 +152,7 @@ async function _handleSend() {
     const parsed = safeJSON(reply);
     if (parsed && (parsed.interests || parsed.personality_traits)) {
       // AI returned the profile JSON — show friendly message, not raw JSON
-      _appendAIMessage('Perfeito! Já tenho tudo que preciso para montar seu perfil vocacional. Um momento... ✨', false);
+      _appendAIMessage('Perfeito! Já tenho tudo que preciso para montar seu perfil vocacional. Um momento...', false);
       scrollToBottom(chatBody);
 
       // Save conversation to DB
@@ -272,7 +272,7 @@ function _appendAIMessage(text, useTypewriter = true) {
   avatarEl.className = 'mini-avatar';
   avatarEl.style.cssText = 'width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--color-primary),var(--color-secondary));display:flex;align-items:center;justify-content:center;font-size:0.875rem;flex-shrink:0;border:2px solid var(--color-accent);';
   avatarEl.setAttribute('aria-hidden', 'true');
-  avatarEl.textContent = '🎯';
+  avatarEl.textContent = 'V';
 
   const inner = document.createElement('div');
   inner.style.cssText = 'display:flex;flex-direction:column;gap:var(--space-1);max-width:100%;';
@@ -335,7 +335,7 @@ function _showTyping() {
   const avatar = document.createElement('div');
   avatar.style.cssText = 'width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--color-primary),var(--color-secondary));display:flex;align-items:center;justify-content:center;font-size:0.875rem;flex-shrink:0;border:2px solid var(--color-accent);';
   avatar.setAttribute('aria-hidden', 'true');
-  avatar.textContent = '🎯';
+  avatar.textContent = 'V';
 
   const indicator = document.createElement('div');
   indicator.className = 'typing-indicator';

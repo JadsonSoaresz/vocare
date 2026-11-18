@@ -200,7 +200,7 @@ function loadAndShowSuggestedQuestions(aiQuestions) {
       onclick="document.getElementById('msgInput').value='${q.replace(/'/g, "\\'")}';document.getElementById('sendBtn').disabled=false"
       aria-label="Usar pergunta sugerida: ${escapeHtml(q)}"
     >
-      💡 ${escapeHtml(q)}
+      <i data-icon="lightbulb"></i> ${escapeHtml(q)}
     </button>
   `).join('');
 }

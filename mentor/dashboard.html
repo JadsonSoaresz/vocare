@@ -14,7 +14,7 @@
 
   <nav class="top-nav" role="navigation" aria-label="Navegação principal">
     <a href="dashboard.html" class="nav-brand">
-      <div class="brand-logo" aria-hidden="true">🎯</div>
+      <div class="brand-logo" aria-hidden="true"><i data-icon="target"></i></div>
       <span>Vo<em>care</em></span>
     </a>
     <div class="nav-actions">
@@ -25,8 +25,8 @@
           <div style="padding:var(--space-3) var(--space-4);border-bottom:1px solid var(--color-divider)">
             <div id="dropdownName" style="font-weight:600;font-size:var(--text-sm)"></div>
           </div>
-          <a href="profile.html" class="dropdown-item" role="menuitem">👤 Meu perfil</a>
-          <button id="logoutBtn" class="dropdown-item danger" role="menuitem">🚪 Sair</button>
+          <a href="profile.html" class="dropdown-item" role="menuitem"><i data-icon="user"></i> Meu perfil</a>
+          <button id="logoutBtn" class="dropdown-item danger" role="menuitem"><i data-icon="log-out"></i> Sair</button>
         </div>
       </div>
     </div>
@@ -49,7 +49,7 @@
 
     <!-- Approval warning -->
     <div id="pendingApproval" class="alert alert-warning mb-4 hidden">
-      <span class="alert-icon">⏳</span>
+      <span class="alert-icon"><i data-icon="hourglass"></i></span>
       <span>Seu perfil está <strong>aguardando aprovação</strong> pela equipe Vocare. Você receberá um e-mail quando for aprovado.</span>
     </div>
 
@@ -57,7 +57,7 @@
     <div class="grid grid-cols-2 gap-4 mb-6">
       <div class="stat-card card">
         <div class="card-body">
-          <div class="stat-icon" style="background:#EEF4FF">⭐</div>
+          <div class="stat-icon" style="background:#EEF4FF"><i data-icon="star"></i></div>
           <div>
             <div class="stat-value" id="reputationScore">—</div>
             <div class="stat-label">Reputação</div>
@@ -66,7 +66,7 @@
       </div>
       <div class="stat-card card">
         <div class="card-body">
-          <div class="stat-icon" style="background:#D1FAE5">💬</div>
+          <div class="stat-icon" style="background:#D1FAE5"><i data-icon="message"></i></div>
           <div>
             <div class="stat-value" id="totalSessions">—</div>
             <div class="stat-label">Sessões</div>
@@ -110,7 +110,7 @@
 
     <div id="activeSessionsList" style="display:flex;flex-direction:column;gap:var(--space-3);margin-bottom:var(--space-6)">
       <div id="noActiveSessions" class="empty-state hidden">
-        <div class="empty-state-icon">💬</div>
+        <div class="empty-state-icon"><i data-icon="message"></i></div>
         <h3>Sem sessões ativas</h3>
         <p>Quando aceitar sessões, elas aparecerão aqui.</p>
       </div>
@@ -123,7 +123,7 @@
 
     <div id="recentSessionsList" style="display:flex;flex-direction:column;gap:var(--space-3)">
       <div id="noRecentSessions" class="empty-state hidden">
-        <div class="empty-state-icon">📋</div>
+        <div class="empty-state-icon"><i data-icon="clipboard"></i></div>
         <h3>Sem histórico ainda</h3>
         <p>Suas sessões concluídas aparecerão aqui.</p>
       </div>
@@ -132,11 +132,11 @@
 
   <nav class="bottom-nav" role="navigation" aria-label="Navegação inferior">
     <a href="dashboard.html" class="bottom-nav-item active" aria-label="Início" aria-current="page">
-      <span class="bottom-nav-icon" aria-hidden="true">🏠</span>
+      <span class="bottom-nav-icon" aria-hidden="true"><i data-icon="home"></i></span>
       <span class="bottom-nav-label">Início</span>
     </a>
     <a href="profile.html" class="bottom-nav-item" aria-label="Perfil">
-      <span class="bottom-nav-icon" aria-hidden="true">👤</span>
+      <span class="bottom-nav-icon" aria-hidden="true"><i data-icon="user"></i></span>
       <span class="bottom-nav-label">Perfil</span>
     </a>
   </nav>
@@ -234,11 +234,11 @@
               </div>
               ${isPending ? `
                 <div class="flex gap-2 mt-3">
-                  <button class="btn btn-success btn-sm flex-1" onclick="acceptSession('${s.id}')">✓ Aceitar</button>
-                  <button class="btn btn-danger btn-sm flex-1" onclick="rejectSession('${s.id}')">✕ Recusar</button>
+                  <button class="btn btn-success btn-sm flex-1" onclick="acceptSession('${s.id}')"><i data-icon="check"></i> Aceitar</button>
+                  <button class="btn btn-danger btn-sm flex-1" onclick="rejectSession('${s.id}')"><i data-icon="x"></i> Recusar</button>
                 </div>
               ` : s.status === 'confirmed' ? `
-                <a href="/student/chat.html?session_id=${s.id}" class="btn btn-primary btn-sm btn-block mt-3">💬 Abrir chat</a>
+                <a href="/student/chat.html?session_id=${s.id}" class="btn btn-primary btn-sm btn-block mt-3"><i data-icon="message"></i> Abrir chat</a>
               ` : isRecent && s.student_rating ? `
                 <div class="flex items-center gap-2 mt-2">
                   <span class="text-xs text-muted">Avaliação:</span>

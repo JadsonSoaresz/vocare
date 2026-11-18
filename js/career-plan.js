@@ -148,7 +148,7 @@ async function _autoGeneratePlan(recs) {
       hide(document.getElementById('generatingState'));
       renderPlan();
       show(document.getElementById('planContent'));
-      Toast.success('Seu plano de carreira foi criado! 🎉');
+      Toast.success('Seu plano de carreira foi criado!');
     } catch (err) {
       hide(document.getElementById('generatingState'));
       Toast.error(handleError(err));
@@ -196,7 +196,7 @@ async function generatePlanForProfession(professionId) {
     hide(document.getElementById('generatingState'));
     renderPlan();
     show(document.getElementById('planContent'));
-    Toast.success('Seu plano de carreira foi criado! 🎉');
+    Toast.success('Seu plano de carreira foi criado!');
 
   } catch (err) {
     hide(document.getElementById('generatingState'));
@@ -226,7 +226,7 @@ async function _regeneratePlanByName(profName) {
     hide(document.getElementById('generatingState'));
     renderPlan();
     show(document.getElementById('planContent'));
-    Toast.success('Plano atualizado! 🎉');
+    Toast.success('Plano atualizado!');
 
   } catch (err) {
     hide(document.getElementById('generatingState'));
@@ -244,7 +244,7 @@ function renderPlan() {
 
   document.getElementById('planProfessionName').textContent = profName;
   document.getElementById('planAreaBadge').textContent      = area;
-  document.getElementById('planAreaIcon').textContent       = areaIcon(area);
+  document.getElementById('planAreaIcon').innerHTML         = areaIcon(area);
 
   const compatEl = document.getElementById('planCompatBadge');
   if (compatEl) compatEl.innerHTML = _recScore > 0 ? compatBadge(_recScore) : '';
@@ -304,7 +304,7 @@ function renderLearningPath() {
       <div class="card" style="padding:var(--space-4)">
         <p class="timeline-phase">${escapeHtml(step.phase || `Fase ${i + 1}`)}</p>
         <h4 class="timeline-title">${escapeHtml(step.description || '')}</h4>
-        ${step.duration ? `<p class="timeline-dur">⏱ ${escapeHtml(step.duration)}</p>` : ''}
+        ${step.duration ? `<p class="timeline-dur"><i data-icon="clock"></i> ${escapeHtml(step.duration)}</p>` : ''}
       </div>
     </div>
   `).join('');
@@ -328,7 +328,7 @@ function renderCourses() {
   container.innerHTML = courses.map((course, i) => `
     <div class="course-card animate-fade-in" style="animation-delay:${i * 60}ms">
       <div class="course-icon" style="background:${course.is_free ? 'var(--color-success)' : 'var(--color-secondary)'}">
-        📚
+        <i data-icon="book"></i>
       </div>
       <div class="course-info">
         <div class="course-name">${escapeHtml(course.name || 'Curso')}</div>
@@ -357,7 +357,7 @@ function renderSkills() {
   }
 
   const savedStatuses = _plan?.id ? Storage.get(`skill_statuses_${_plan.id}`, {}) : {};
-  const labels = { pending: '⬜', progress: '🔄', done: '✅' };
+  const labels = { pending: '<i data-icon="square"></i>', progress: '<i data-icon="loader"></i>', done: '<i data-icon="check-circle"></i>' };
 
   // Render chips — click delegation already wired in initCareerPlan
   container.innerHTML = skills.map((skill, i) => {
@@ -384,10 +384,10 @@ function _applySkillToggle(chip) {
                  : chip.classList.contains('progress') ? 'progress'
                  : 'pending';
   const next   = statuses[(statuses.indexOf(current) + 1) % statuses.length];
-  const labels = { pending: '⬜', progress: '🔄', done: '✅' };
+  const labels = { pending: '<i data-icon="square"></i>', progress: '<i data-icon="loader"></i>', done: '<i data-icon="check-circle"></i>' };
 
   chip.className = `skill-chip ${next} animate-fade-in-scale`;
-  chip.textContent = `${labels[next]} ${skills[idx] || ''}`;
+  chip.innerHTML = `${labels[next]} ${escapeHtml(skills[idx] || '')}`;
   chip.setAttribute('aria-label', `${skills[idx] || ''} — estado: ${next}`);
 
   if (_plan?.id) {
@@ -424,7 +424,7 @@ function renderGoals() {
         tabindex="0"
         style="animation-delay:${i * 50}ms"
       >
-        <div class="checklist-checkbox">${done ? '✓' : ''}</div>
+        <div class="checklist-checkbox">${done ? '<i data-icon="check"></i>' : ''}</div>
         <div class="flex-1">
           <div class="checklist-text font-medium text-sm">${escapeHtml(goal.goal || '')}</div>
           <div class="text-xs text-muted mt-1">Semana ${goal.week || i + 1}</div>
@@ -489,7 +489,7 @@ function _showStalenessNotice() {
   const notice = document.createElement('div');
   notice.className = 'alert alert-info staleness-notice';
   notice.style.cssText = 'margin-bottom:var(--space-4);border-radius:var(--radius-lg)';
-  notice.innerHTML = `<span class="alert-icon">ℹ️</span>
+  notice.innerHTML = `<span class="alert-icon"><i data-icon="info"></i></span>
     <span>Seu plano tem mais de 30 dias.
       <button id="stalenessRegenBtn" style="background:none;border:none;color:var(--color-secondary);font-weight:600;cursor:pointer;padding:0">
         Atualizar agora →

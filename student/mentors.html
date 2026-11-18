@@ -18,12 +18,12 @@
       <img src="../assets/logo.png" alt="Vocare" class="nav-logo">
     </a>
         <nav class="nav-menu-desktop" aria-label="Menu principal">
-      <a href="dashboard.html" class="btn btn-ghost btn-sm">🏠 Início</a>
-      <a href="professions.html" class="btn btn-ghost btn-sm">🔍 Explorar</a>
-      <a href="mentors.html" class="btn btn-ghost btn-sm" style="font-weight:600;color:var(--color-primary)">👤 Mentores</a>
-      <a href="voca.html" class="btn btn-ghost btn-sm">💬 Chat IA</a>
-      <a href="career-plan.html" class="btn btn-ghost btn-sm">📋 Plano</a>
-      <a href="test.html" class="btn btn-ghost btn-sm">🎯 Refazer Teste</a>
+      <a href="dashboard.html" class="btn btn-ghost btn-sm"><i data-icon="home"></i> Início</a>
+      <a href="professions.html" class="btn btn-ghost btn-sm"><i data-icon="search"></i> Explorar</a>
+      <a href="mentors.html" class="btn btn-ghost btn-sm" style="font-weight:600;color:var(--color-primary)"><i data-icon="user"></i> Mentores</a>
+      <a href="voca.html" class="btn btn-ghost btn-sm"><i data-icon="message"></i> Chat IA</a>
+      <a href="career-plan.html" class="btn btn-ghost btn-sm"><i data-icon="clipboard"></i> Plano</a>
+      <a href="test.html" class="btn btn-ghost btn-sm"><i data-icon="target"></i> Refazer Teste</a>
     </nav>
     <div class="nav-actions">
       <div class="dropdown">
@@ -33,7 +33,7 @@
             <div id="dropdownName" style="font-weight:600;font-size:var(--text-sm)"></div>
             <div id="dropdownEmail" style="font-size:var(--text-xs);color:var(--color-muted)"></div>
           </div>
-          <button id="logoutBtn" class="dropdown-item danger" role="menuitem">🚪 Sair</button>
+          <button id="logoutBtn" class="dropdown-item danger" role="menuitem"><i data-icon="log-out"></i> Sair</button>
         </div>
       </div>
     </div>
@@ -42,12 +42,12 @@
   <main class="page-content" aria-live="polite">
     <!-- Page Title -->
     <div class="section-header mb-4">
-      <h1 style="font-size:var(--text-xl)">👤 Mentores</h1>
+      <h1 style="font-size:var(--text-xl)">Mentores</h1>
     </div>
 
     <!-- Free sessions info -->
     <div id="sessionsInfo" class="alert alert-info mb-4" role="status">
-      <span class="alert-icon">ℹ️</span>
+      <span class="alert-icon"><i data-icon="info"></i></span>
       <span id="sessionsInfoText">Carregando...</span>
     </div>
 
@@ -84,7 +84,7 @@
 
     <!-- Empty state -->
     <div id="mentorsEmpty" class="empty-state hidden">
-      <div class="empty-state-icon">👤</div>
+      <div class="empty-state-icon"><i data-icon="user"></i></div>
       <h3>Nenhum mentor encontrado</h3>
       <p>Tente ajustar os filtros ou verifique novamente mais tarde.</p>
     </div>

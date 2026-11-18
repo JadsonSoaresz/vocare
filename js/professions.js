@@ -119,7 +119,7 @@
       const btn = document.createElement('button');
       btn.className = 'chip';
       btn.dataset.area = area;
-      btn.textContent = `${areaIcon(area)} ${area}`;
+      btn.innerHTML = `${areaIcon(area)} ${escapeHtml(area)}`;
       btn.setAttribute('aria-pressed', 'false');
       btn.addEventListener('click', () => _setAreaFilter(area));
       frag.appendChild(btn);
@@ -205,7 +205,7 @@
     if (_filtered.length === 0) {
       grid.innerHTML = `
         <div class="empty-state" style="grid-column:1/-1">
-          <div class="empty-state-icon" aria-hidden="true">🔍</div>
+          <div class="empty-state-icon" aria-hidden="true"><i data-icon="search"></i></div>
           <h3>Nenhuma profissão encontrada</h3>
           <p>Tente outro termo de busca ou selecione uma área diferente.</p>
           <button class="btn btn-outline btn-sm mt-3" onclick="_resetFilters()">Limpar filtros</button>
@@ -313,7 +313,7 @@
     const videoHtml = p.vlog_url
       ? `<div style="margin-bottom:var(--space-5)">
           <h4 style="font-size:var(--text-base);font-weight:var(--fw-semi);margin-bottom:var(--space-3);color:var(--color-text)">
-            🎬 Vídeos sobre esta carreira
+            Vídeos sobre esta carreira
           </h4>
           <div style="background:${grad};border-radius:var(--radius-xl);padding:var(--space-5);text-align:center;position:relative;overflow:hidden">
             <div style="position:absolute;inset:0;background:rgba(0,0,0,0.15)"></div>
@@ -347,9 +347,9 @@
       phd:          'Doutorado',
     };
     const OUTLOOK_LABELS = {
-      growing:  '📈 Crescente',
-      stable:   '➡️ Estável',
-      declining:'📉 Em queda',
+      growing:  '<i data-icon="trending-up"></i> Crescente',
+      stable:   '<i data-icon="arrow-right"></i> Estável',
+      declining:'<i data-icon="trending-down"></i> Em queda',
     };
 
     const education = EDUCATION_LABELS[p.education_required] || p.education_required || '—';
@@ -380,7 +380,7 @@
     const mentorsSection = mentors.length > 0
       ? `<div style="margin-bottom:var(--space-4)">
           <h4 style="font-size:var(--text-base);font-weight:var(--fw-semi);margin-bottom:var(--space-3)">
-            👤 Mentores desta área
+            Mentores desta área
           </h4>
           <div>
             ${mentors.slice(0, 4).map(m => {
@@ -418,7 +418,7 @@
     const skills = skillsList.length > 0
       ? `<div style="margin-bottom:var(--space-4)">
           <h4 style="font-size:var(--text-base);font-weight:var(--fw-semi);margin-bottom:var(--space-2)">
-            🧠 Habilidades necessárias
+            Habilidades necessárias
           </h4>
           <div class="flex flex-wrap gap-2">
             ${skillsList.map(s => `<span class="skill-chip pending">${escapeHtml(s)}</span>`).join('')}
@@ -429,7 +429,7 @@
     return `
       <!-- Modal header -->
       <div class="profession-modal-header">
-        <button class="profession-modal-close" onclick="window._closeModal()" aria-label="Fechar">✕</button>
+        <button class="profession-modal-close" onclick="window._closeModal()" aria-label="Fechar"><i data-icon="x"></i></button>
         <div style="display:flex;align-items:center;gap:var(--space-3);margin-bottom:var(--space-3)">
           <div style="width:52px;height:52px;border-radius:var(--radius-lg);background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:1.75rem;flex-shrink:0" aria-hidden="true">${icon}</div>
           <div>
@@ -464,7 +464,7 @@
         <button class="btn btn-ghost" onclick="window._closeModal()">Fechar</button>
         <button class="btn btn-primary"
                 onclick="navigate('career-plan.html?profession_id=${escapeHtml(String(p.id || ''))}')">
-          📋 Criar plano de carreira
+          <i data-icon="clipboard"></i> Criar plano de carreira
         </button>
       </div>`;
   }

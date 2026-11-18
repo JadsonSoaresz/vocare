@@ -107,7 +107,7 @@
     const subtitle  = document.getElementById('greetingSubtitle');
     const avatarEl  = document.getElementById('headerAvatar');
 
-    if (greeting) greeting.textContent = `Olá, ${escapeHtml(firstName)}! 👋`;
+    if (greeting) greeting.textContent = `Olá, ${firstName}!`;
     if (subtitle) subtitle.textContent = p.school
       ? `${escapeHtml(p.school)}`
       : 'Bem-vindo ao Vocare';
@@ -188,7 +188,7 @@
       const testDone = vp?.completed_test;
       container.innerHTML = `
         <div class="empty-state" style="min-width:100%;padding:var(--space-8) var(--space-4)">
-          <div class="empty-state-icon" aria-hidden="true">🎯</div>
+          <div class="empty-state-icon" aria-hidden="true"><i data-icon="target"></i></div>
           <h3>${testDone ? 'Calculando recomendações...' : 'Nenhuma recomendação ainda'}</h3>
           <p>${testDone
             ? 'Suas profissões compatíveis serão exibidas em breve.'
@@ -238,7 +238,7 @@
     if (!items || items.length === 0) {
       container.innerHTML = `
         <div class="empty-state" style="min-width:100%;padding:var(--space-8) var(--space-4)">
-          <div class="empty-state-icon" aria-hidden="true">🎬</div>
+          <div class="empty-state-icon" aria-hidden="true"><i data-icon="video"></i></div>
           <h3>Nenhum vlog disponível</h3>
           <p>Os vlogs de profissões aparecerão aqui em breve.</p>
         </div>`;
@@ -264,7 +264,7 @@
           <div class="vlog-thumb-wrap">
             ${thumbHtml}
             <div class="vlog-play-overlay" aria-hidden="true">
-              <div class="vlog-play-btn">▶</div>
+              <div class="vlog-play-btn"><i data-icon="play"></i></div>
             </div>
           </div>
           <div class="vlog-info">
@@ -283,7 +283,7 @@
     if (!mentorList || mentorList.length === 0) {
       container.innerHTML = `
         <div class="empty-state" style="min-width:100%;padding:var(--space-8) var(--space-4)">
-          <div class="empty-state-icon" aria-hidden="true">👤</div>
+          <div class="empty-state-icon" aria-hidden="true"><i data-icon="user"></i></div>
           <h3>Nenhum mentor disponível</h3>
           <p>Novos mentores são adicionados regularmente.</p>
         </div>`;
@@ -331,7 +331,7 @@
       container.innerHTML = `
         <div class="career-plan-card">
           <div class="career-plan-header">
-            <div class="career-plan-icon" aria-hidden="true">📋</div>
+            <div class="career-plan-icon" aria-hidden="true"><i data-icon="clipboard"></i></div>
             <div>
               <p style="font-weight:var(--fw-semi);color:var(--color-primary)">Crie seu plano de carreira</p>
               <p style="font-size:var(--text-sm);color:var(--color-muted);margin:0">Personalize sua jornada rumo à profissão ideal.</p>
@@ -351,7 +351,7 @@
     container.innerHTML = `
       <div class="career-plan-card" role="region" aria-label="Plano de carreira">
         <div class="career-plan-header">
-          <div class="career-plan-icon" aria-hidden="true">📋</div>
+          <div class="career-plan-icon" aria-hidden="true"><i data-icon="clipboard"></i></div>
           <div style="flex:1;min-width:0">
             <p style="font-weight:var(--fw-bold);color:var(--color-primary);font-size:var(--text-base);margin-bottom:2px">
               ${escapeHtml(professionName)}
@@ -379,7 +379,7 @@
     if (!jobList || jobList.length === 0) {
       container.innerHTML = `
         <div class="empty-state">
-          <div class="empty-state-icon" aria-hidden="true">💼</div>
+          <div class="empty-state-icon" aria-hidden="true"><i data-icon="briefcase"></i></div>
           <h3>Nenhuma vaga disponível</h3>
           <p>Vagas para estudantes aparecerão aqui em breve.</p>
         </div>`;

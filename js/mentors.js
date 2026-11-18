@@ -87,7 +87,7 @@ function buildAreaFilters() {
     const chip = document.createElement('button');
     chip.className = 'chip';
     chip.dataset.area = area;
-    chip.textContent = `${areaIcon(area)} ${area}`;
+    chip.innerHTML = `${areaIcon(area)} ${escapeHtml(area)}`;
     chip.setAttribute('aria-pressed', 'false');
     container.appendChild(chip);
   });
@@ -156,12 +156,12 @@ function mentorCard(mentor) {
               <div class="star-rating" aria-label="${mentor.reputation_score || 0} de 10">${stars}</div>
               <span class="text-xs text-muted">(${mentor.total_sessions || 0} sessões)</span>
             </div>
-            ${city ? `<p class="text-xs text-muted mt-1">📍 ${escapeHtml(city)}</p>` : ''}
+            ${city ? `<p class="text-xs text-muted mt-1"><i data-icon="map-pin"></i> ${escapeHtml(city)}</p>` : ''}
           </div>
         </div>
         <div class="flex items-center gap-2 mt-3">
           ${hasFree
-            ? `<span class="badge badge-success" style="font-size:11px">🎁 ${_freeSessions[mentor.id]} sessão grátis</span>`
+            ? `<span class="badge badge-success" style="font-size:11px"><i data-icon="gift"></i> ${_freeSessions[mentor.id]} sessão grátis</span>`
             : `<span class="badge badge-muted" style="font-size:11px">Sessão premium</span>`
           }
           <span class="badge badge-secondary" style="font-size:11px">${escapeHtml(mentor.area || '')}</span>
@@ -194,7 +194,7 @@ async function openMentorModal(mentorId) {
           <p class="text-sm text-muted">${escapeHtml(_selectedMentor.profession || _selectedMentor.area || '')}</p>
         </div>
       </div>
-      <button class="modal-close" onclick="closeModal('mentorModal')" aria-label="Fechar">✕</button>
+      <button class="modal-close" onclick="closeModal('mentorModal')" aria-label="Fechar"><i data-icon="x"></i></button>
     </div>
     <div class="modal-body">
       <div class="flex items-center gap-3 mb-4">
@@ -216,7 +216,7 @@ async function openMentorModal(mentorId) {
       </div>
 
       <div class="alert ${hasFree ? 'alert-success' : 'alert-warning'} mb-4">
-        <span class="alert-icon">${hasFree ? '🎁' : '⚠️'}</span>
+        <span class="alert-icon">${hasFree ? '<i data-icon="gift"></i>' : '<i data-icon="alert"></i>'}</span>
         <span class="text-sm">
           ${hasFree
             ? `Você tem <strong>${_freeSessions[mentorId]} sessão gratuita</strong> disponível com este mentor este mês.`
@@ -226,13 +226,13 @@ async function openMentorModal(mentorId) {
       </div>
 
       <div id="suggestedQs" class="mb-4">
-        <h4 class="font-semi text-sm mb-2">💡 Sugestões de perguntas:</h4>
+        <h4 class="font-semi text-sm mb-2">Sugestões de perguntas:</h4>
         <div class="spinner spinner-sm mx-auto"></div>
       </div>
     </div>
     <div class="modal-footer" style="flex-direction:column;gap:var(--space-2)">
       <button id="startChatBtn" class="btn btn-primary btn-block" ${!_selectedMentor.is_available && !hasFree ? '' : ''}>
-        💬 Iniciar chat${hasFree ? ' (gratuito)' : ' (premium)'}
+        <i data-icon="message"></i> Iniciar chat${hasFree ? ' (gratuito)' : ' (premium)'}
       </button>
       <button class="btn btn-ghost btn-block btn-sm" onclick="closeModal('mentorModal')">Cancelar</button>
     </div>
@@ -257,7 +257,7 @@ async function loadSuggestedQuestions(area) {
     const container = document.getElementById('suggestedQs');
     if (!container) return;
     container.innerHTML = `
-      <h4 class="font-semi text-sm mb-2">💡 Sugestões de perguntas:</h4>
+      <h4 class="font-semi text-sm mb-2">Sugestões de perguntas:</h4>
       <ul style="display:flex;flex-direction:column;gap:var(--space-2)">
         ${questions.map(q => `
           <li class="flex items-start gap-2" style="font-size:var(--text-sm);color:var(--color-text-soft)">

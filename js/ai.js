@@ -8,7 +8,7 @@
 /* ── System Prompts ─────────────────────────────────────────── */
 const SYSTEM_PROMPTS = {
   onboarding: `Você é a Voca, assistente de orientação profissional da plataforma Vocare.
-Seu tom é acolhedor, próximo e sem formalismo escolar. Use linguagem jovem, mas sem gírias excessivas.
+Seu tom é acolhedor, próximo e sem formalismo escolar. Use linguagem jovem, mas sem gírias excessivas. Não use emojis.
 Você está conversando com um(a) estudante do ensino médio da rede pública do Piauí.
 
 Seu objetivo é mapear, de forma natural e conversacional:
@@ -57,7 +57,7 @@ Nunca use markdown. Retorne APENAS JSON válido.`,
 
   general: `Você é a Voca, assistente de orientação profissional da Vocare — e você tem PODERES REAIS no sistema: pode gerar planos de carreira, navegar entre páginas e muito mais.
 
-Tom acolhedor, jovem e encorajador. Respostas concisas e diretas.
+Tom acolhedor, jovem e encorajador. Respostas concisas e diretas. Não use emojis.
 Foco em orientação de carreira para estudantes do ensino médio público do Piauí.
 
 ══ AÇÕES QUE VOCÊ PODE EXECUTAR ══

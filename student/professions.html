@@ -220,12 +220,12 @@
       <img src="../assets/logo.png" alt="Vocare" class="nav-logo">
     </a>
         <nav class="nav-menu-desktop" aria-label="Menu principal">
-      <a href="dashboard.html" class="btn btn-ghost btn-sm">🏠 Início</a>
-      <a href="professions.html" class="btn btn-ghost btn-sm" style="font-weight:600;color:var(--color-primary)">🔍 Explorar</a>
-      <a href="mentors.html" class="btn btn-ghost btn-sm">👤 Mentores</a>
-      <a href="voca.html" class="btn btn-ghost btn-sm">💬 Chat IA</a>
-      <a href="career-plan.html" class="btn btn-ghost btn-sm">📋 Plano</a>
-      <a href="test.html" class="btn btn-ghost btn-sm">🎯 Refazer Teste</a>
+      <a href="dashboard.html" class="btn btn-ghost btn-sm"><i data-icon="home"></i> Início</a>
+      <a href="professions.html" class="btn btn-ghost btn-sm" style="font-weight:600;color:var(--color-primary)"><i data-icon="search"></i> Explorar</a>
+      <a href="mentors.html" class="btn btn-ghost btn-sm"><i data-icon="user"></i> Mentores</a>
+      <a href="voca.html" class="btn btn-ghost btn-sm"><i data-icon="message"></i> Chat IA</a>
+      <a href="career-plan.html" class="btn btn-ghost btn-sm"><i data-icon="clipboard"></i> Plano</a>
+      <a href="test.html" class="btn btn-ghost btn-sm"><i data-icon="target"></i> Refazer Teste</a>
     </nav>
     <div class="nav-actions">
       <div class="dropdown" style="position:relative">
@@ -234,10 +234,10 @@
           <div style="padding:var(--space-3) var(--space-4);border-bottom:1px solid var(--color-divider)">
             <p id="dropdownName" style="font-weight:var(--fw-semi);font-size:var(--text-sm);color:var(--color-text)"></p>
           </div>
-          <button class="dropdown-item" onclick="navigate('dashboard.html')">🏠 Início</button>
-          <button class="dropdown-item" onclick="navigate('career-plan.html')">📋 Meu plano</button>
+          <button class="dropdown-item" onclick="navigate('dashboard.html')"><i data-icon="home"></i> Início</button>
+          <button class="dropdown-item" onclick="navigate('career-plan.html')"><i data-icon="clipboard"></i> Meu plano</button>
           <div class="dropdown-divider"></div>
-          <button id="logoutBtn" class="dropdown-item danger">🚪 Sair</button>
+          <button id="logoutBtn" class="dropdown-item danger"><i data-icon="log-out"></i> Sair</button>
         </div>
       </div>
     </div>
@@ -249,7 +249,7 @@
     <p>Descubra carreiras compatíveis com o seu perfil</p>
     <div class="professions-search-wrap">
       <div class="search-bar" role="search">
-        <span class="search-icon" aria-hidden="true">🔍</span>
+        <span class="search-icon" aria-hidden="true"><i data-icon="search"></i></span>
         <input
           type="search"
           id="searchInput"
@@ -257,7 +257,7 @@
           autocomplete="off"
           aria-label="Buscar profissões"
         >
-        <button id="clearSearch" class="btn-ghost" style="background:none;border:none;color:rgba(255,255,255,0.7);font-size:1rem;cursor:pointer;padding:0 var(--space-1);display:none" aria-label="Limpar busca">✕</button>
+        <button id="clearSearch" class="btn-ghost" style="background:none;border:none;color:rgba(255,255,255,0.7);font-size:1rem;cursor:pointer;padding:0 var(--space-1);display:none" aria-label="Limpar busca"><i data-icon="x"></i></button>
       </div>
     </div>
   </header>
@@ -266,7 +266,7 @@
   <div class="professions-filters" role="toolbar" aria-label="Filtros de área">
     <div id="filterChips" class="filter-chips">
       <button class="chip active" data-filter="all">Todas</button>
-      <button class="chip" data-filter="sort-compat">⭐ Mais compatíveis</button>
+      <button class="chip" data-filter="sort-compat"><i data-icon="star"></i> Mais compatíveis</button>
       <!-- Dynamic area chips injected by JS -->
     </div>
   </div>

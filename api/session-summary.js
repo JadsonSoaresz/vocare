@@ -65,7 +65,7 @@ module.exports = async function handler(req, res) {
       const res2 = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${process.env.GROQ_API_KEY}` },
-        body: JSON.stringify({ model: 'llama-3.1-8b-instant', max_tokens: 400, messages: [{ role: 'user', content: prompt }] }),
+        body: JSON.stringify({ model: 'openai/gpt-oss-20b', max_tokens: 800, reasoning_effort: 'low', messages: [{ role: 'user', content: prompt }] }),
       });
       const data = await res2.json();
       summary = data.choices?.[0]?.message?.content ?? '';

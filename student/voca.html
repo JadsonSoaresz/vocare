@@ -292,12 +292,12 @@
       <img src="../assets/logo.png" alt="Vocare" class="nav-logo">
     </a>
     <nav class="nav-menu-desktop" aria-label="Menu principal">
-      <a href="dashboard.html" class="btn btn-ghost btn-sm">🏠 Início</a>
-      <a href="professions.html" class="btn btn-ghost btn-sm">🔍 Explorar</a>
-      <a href="mentors.html" class="btn btn-ghost btn-sm">👤 Mentores</a>
-      <a href="voca.html" class="btn btn-ghost btn-sm" style="font-weight:600;color:var(--color-primary)">💬 Chat IA</a>
-      <a href="career-plan.html" class="btn btn-ghost btn-sm">📋 Plano</a>
-      <a href="test.html" class="btn btn-ghost btn-sm">🎯 Refazer Teste</a>
+      <a href="dashboard.html" class="btn btn-ghost btn-sm"><i data-icon="home"></i> Início</a>
+      <a href="professions.html" class="btn btn-ghost btn-sm"><i data-icon="search"></i> Explorar</a>
+      <a href="mentors.html" class="btn btn-ghost btn-sm"><i data-icon="user"></i> Mentores</a>
+      <a href="voca.html" class="btn btn-ghost btn-sm" style="font-weight:600;color:var(--color-primary)"><i data-icon="message"></i> Chat IA</a>
+      <a href="career-plan.html" class="btn btn-ghost btn-sm"><i data-icon="clipboard"></i> Plano</a>
+      <a href="test.html" class="btn btn-ghost btn-sm"><i data-icon="target"></i> Refazer Teste</a>
     </nav>
     <div class="nav-actions">
       <div class="dropdown" style="position:relative">
@@ -308,11 +308,11 @@
             <p id="dropdownEmail" style="font-size:var(--text-xs);color:var(--color-muted)"></p>
           </div>
           <button class="dropdown-item" onclick="navigate('../student/career-plan.html')">
-            📋 Meu plano de carreira
+            <i data-icon="clipboard"></i> Meu plano de carreira
           </button>
           <div class="dropdown-divider"></div>
           <button id="logoutBtn" class="dropdown-item danger">
-            🚪 Sair
+            <i data-icon="log-out"></i> Sair
           </button>
         </div>
       </div>
@@ -323,7 +323,7 @@
     <div class="voca-chat-wrap">
       <!-- Voca header -->
       <div class="voca-chat-header">
-        <div class="voca-avatar" aria-hidden="true">🤖</div>
+        <div class="voca-avatar" aria-hidden="true">V</div>
         <div class="voca-info">
           <h2>Voca</h2>
           <p>● Online agora</p>
@@ -334,7 +334,7 @@
       <div class="voca-messages" id="vocaMessages" role="log" aria-live="polite" aria-label="Conversa com Voca">
         <!-- Welcome shown until first message -->
         <div class="voca-welcome" id="vocaWelcome">
-          <div class="voca-welcome-icon">💬</div>
+          <div class="voca-welcome-icon"><i data-icon="message"></i></div>
           <h3>Olá! Sou a Voca</h3>
           <p>Sua assistente de orientação profissional. Pode me perguntar sobre carreiras, profissões, como se preparar para o mercado de trabalho e muito mais!</p>
         </div>
@@ -346,11 +346,11 @@
       <div style="width:100%">
         <!-- Quick prompts (shown only before first message) -->
         <div class="voca-quick-prompts" id="vocaQuickPrompts">
-          <button class="voca-quick-chip" data-prompt="Mude meu plano de carreira para Engenheiro de Software">🔄 Mudar plano</button>
-          <button class="voca-quick-chip" data-prompt="Me leva para o meu plano de carreira">📋 Ver meu plano</button>
-          <button class="voca-quick-chip" data-prompt="Quais carreiras combinam com quem gosta de tecnologia?">💻 Carreiras em TI</button>
-          <button class="voca-quick-chip" data-prompt="Como conseguir meu primeiro estágio?">💼 Primeiro estágio</button>
-          <button class="voca-quick-chip" data-prompt="Quais cursos técnicos têm no Piauí?">🎓 Cursos técnicos PI</button>
+          <button class="voca-quick-chip" data-prompt="Mude meu plano de carreira para Engenheiro de Software"><i data-icon="refresh"></i> Mudar plano</button>
+          <button class="voca-quick-chip" data-prompt="Me leva para o meu plano de carreira"><i data-icon="clipboard"></i> Ver meu plano</button>
+          <button class="voca-quick-chip" data-prompt="Quais carreiras combinam com quem gosta de tecnologia?"><i data-icon="laptop"></i> Carreiras em TI</button>
+          <button class="voca-quick-chip" data-prompt="Como conseguir meu primeiro estágio?"><i data-icon="briefcase"></i> Primeiro estágio</button>
+          <button class="voca-quick-chip" data-prompt="Quais cursos técnicos têm no Piauí?"><i data-icon="graduation-cap"></i> Cursos técnicos PI</button>
         </div>
         <div style="display:flex;gap:var(--space-2);align-items:flex-end">
           <textarea
@@ -361,7 +361,7 @@
             maxlength="2000"
             aria-label="Mensagem para a Voca"
           ></textarea>
-          <button id="vocaSendBtn" class="voca-send-btn" aria-label="Enviar mensagem" disabled>➤</button>
+          <button id="vocaSendBtn" class="voca-send-btn" aria-label="Enviar mensagem" disabled><i data-icon="send"></i></button>
         </div>
       </div>
     </div>

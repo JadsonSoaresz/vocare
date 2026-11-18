@@ -157,8 +157,9 @@ async function callGroq(prompt) {
       'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
     },
     body: JSON.stringify({
-      model:      'llama-3.3-70b-versatile',
+      model:      'openai/gpt-oss-120b',
       max_tokens: 2500,
+      reasoning_effort: 'low',
       messages:   [{ role: 'user', content: prompt }],
     }),
   });

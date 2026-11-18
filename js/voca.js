@@ -33,11 +33,11 @@ let _vocProfile = null; // cached vocational profile
   if (_vocProfile?.completed_test && _vocProfile.recommended_professions?.length) {
     const top = _vocProfile.recommended_professions[0];
     _addBotMessage(
-      `Olá${firstName ? `, ${firstName}` : ''}! 👋 Vi que você tem interesse em **${top}**.\n\nPosso te ajudar com orientação de carreira, gerar ou mudar seu plano, tirar dúvidas sobre profissões e muito mais. O que você quer fazer?`
+      `Olá${firstName ? `, ${firstName}` : ''}! Vi que você tem interesse em **${top}**.\n\nPosso te ajudar com orientação de carreira, gerar ou mudar seu plano, tirar dúvidas sobre profissões e muito mais. O que você quer fazer?`
     );
   } else {
     _addBotMessage(
-      `Olá${firstName ? `, ${firstName}` : ''}! 👋 Sou a Voca, sua assistente de orientação profissional.\n\nPosso responder perguntas, gerar seu plano de carreira, mudar sua profissão-alvo e muito mais. Como posso te ajudar?`
+      `Olá${firstName ? `, ${firstName}` : ''}! Sou a Voca, sua assistente de orientação profissional.\n\nPosso responder perguntas, gerar seu plano de carreira, mudar sua profissão-alvo e muito mais. Como posso te ajudar?`
     );
   }
 
@@ -111,7 +111,7 @@ async function _send() {
 
   } catch (err) {
     typingEl.remove();
-    _addBotMessage('Desculpe, tive um problema ao responder. Tente novamente. 😔');
+    _addBotMessage('Desculpe, tive um problema ao responder. Tente novamente.');
     console.error('[Voca] callAI error:', err.message);
   } finally {
     _sending = false;
@@ -158,7 +158,7 @@ async function _executeAction(action) {
 async function _actionRegeneratePlan(professionName) {
   if (!professionName) return;
 
-  const statusMsg = _addSystemMessage(`⏳ Gerando plano de carreira para **${professionName}**...`);
+  const statusMsg = _addSystemMessage(`Gerando plano de carreira para **${professionName}**...`);
 
   try {
     // Try to find profession in DB by name (fuzzy)
@@ -189,13 +189,13 @@ async function _actionRegeneratePlan(professionName) {
 
     statusMsg.remove();
     _addSystemMessage(
-      `✅ Plano de carreira para **${professionName}** criado com sucesso!\n\n[📋 Ver meu plano](career-plan.html)`,
+      `Plano de carreira para **${professionName}** criado com sucesso!\n\n[Ver meu plano](career-plan.html)`,
       true
     );
 
   } catch (err) {
     statusMsg.remove();
-    _addSystemMessage(`❌ Não consegui gerar o plano agora. Tente novamente em instantes.`);
+    _addSystemMessage(`Não consegui gerar o plano agora. Tente novamente em instantes.`);
     console.error('[Voca] regenerate_plan error:', err.message);
   }
 }
@@ -213,7 +213,7 @@ function _actionNavigate(page) {
   const dest = pages[page];
   if (!dest) return;
 
-  _addSystemMessage(`🔗 Te levando para **${_pageLabel(page)}**...`);
+  _addSystemMessage(`Te levando para **${_pageLabel(page)}**...`);
   setTimeout(() => navigate(dest), 1200);
 }
 
@@ -225,13 +225,13 @@ function _pageLabel(page) {
 async function _actionCompleteGoals(indices) {
   if (!indices?.length) return;
 
-  const statusMsg = _addSystemMessage(`⏳ Marcando ${indices.length} meta(s) como concluída(s)...`);
+  const statusMsg = _addSystemMessage(`Marcando ${indices.length} meta(s) como concluída(s)...`);
 
   try {
     const plan = await DB.careerPlans.get(Auth.userId);
     if (!plan) {
       statusMsg.remove();
-      _addSystemMessage('❌ Nenhum plano de carreira encontrado. Crie um plano primeiro!');
+      _addSystemMessage('Nenhum plano de carreira encontrado. Crie um plano primeiro!');
       return;
     }
 
@@ -243,11 +243,11 @@ async function _actionCompleteGoals(indices) {
     await DB.careerPlans.updateGoals(plan.id, goals);
 
     statusMsg.remove();
-    _addSystemMessage(`✅ ${indices.length} meta(s) marcada(s) como concluída(s)!\n\n[📋 Ver meu plano](career-plan.html)`, true);
+    _addSystemMessage(`${indices.length} meta(s) marcada(s) como concluída(s)!\n\n[Ver meu plano](career-plan.html)`, true);
 
   } catch (err) {
     statusMsg.remove();
-    _addSystemMessage('❌ Não consegui atualizar as metas. Tente pelo plano de carreira.');
+    _addSystemMessage('Não consegui atualizar as metas. Tente pelo plano de carreira.');
     console.error('[Voca] complete_goals error:', err.message);
   }
 }
@@ -267,7 +267,7 @@ function _addBotMessage(text) {
   const div = document.createElement('div');
   div.className = 'voca-msg bot';
   div.innerHTML = `
-    <div class="voca-msg-avatar" aria-hidden="true">🤖</div>
+    <div class="voca-msg-avatar" aria-hidden="true">V</div>
     <div class="voca-msg-bubble">${_renderMarkdown(text)}</div>
   `;
   container.appendChild(div);
@@ -280,7 +280,7 @@ function _addSystemMessage(text, hasLink = false) {
   const div = document.createElement('div');
   div.className = 'voca-msg bot';
   div.innerHTML = `
-    <div class="voca-msg-avatar" aria-hidden="true">⚡</div>
+    <div class="voca-msg-avatar" aria-hidden="true"><i data-icon="zap"></i></div>
     <div class="voca-msg-bubble voca-action-bubble">${_renderMarkdown(text)}</div>
   `;
   container.appendChild(div);
@@ -293,7 +293,7 @@ function _showTyping() {
   const div = document.createElement('div');
   div.className = 'voca-msg bot';
   div.innerHTML = `
-    <div class="voca-msg-avatar" aria-hidden="true">🤖</div>
+    <div class="voca-msg-avatar" aria-hidden="true">V</div>
     <div class="voca-typing"><span></span><span></span><span></span></div>
   `;
   container.appendChild(div);

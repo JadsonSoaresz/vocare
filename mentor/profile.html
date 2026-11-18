@@ -14,7 +14,7 @@
 
   <nav class="top-nav" role="navigation">
     <a href="dashboard.html" class="nav-brand">
-      <div class="brand-logo" aria-hidden="true">🎯</div>
+      <div class="brand-logo" aria-hidden="true"><i data-icon="target"></i></div>
       <span>Vo<em>care</em></span>
     </a>
     <div class="nav-actions">
@@ -24,14 +24,14 @@
 
   <main class="page-content" aria-live="polite">
     <div class="section-header mb-4">
-      <h1 style="font-size:var(--text-xl)">👤 Meu Perfil</h1>
+      <h1 style="font-size:var(--text-xl)">Meu Perfil</h1>
     </div>
 
     <!-- Avatar section -->
     <div class="card mb-4">
       <div class="card-body text-center">
         <div id="profileAvatar" class="avatar avatar-2xl mx-auto mb-4" style="background:var(--color-primary)">?</div>
-        <button id="changeAvatarBtn" class="btn btn-ghost btn-sm text-muted">📷 Alterar foto</button>
+        <button id="changeAvatarBtn" class="btn btn-ghost btn-sm text-muted"><i data-icon="camera"></i> Alterar foto</button>
         <input type="file" id="avatarInput" accept="image/*" class="hidden">
       </div>
     </div>
@@ -100,12 +100,12 @@
       </div>
 
       <div id="formError" class="alert alert-danger hidden mb-4" role="alert">
-        <span class="alert-icon">⚠️</span>
+        <span class="alert-icon"><i data-icon="alert"></i></span>
         <span id="formErrorMsg"></span>
       </div>
 
       <button type="submit" id="saveBtn" class="btn btn-primary btn-block btn-lg">
-        💾 Salvar perfil
+        <i data-icon="save"></i> Salvar perfil
       </button>
     </form>
 
@@ -114,18 +114,18 @@
       <div class="card-body">
         <h4 class="font-semi" style="color:var(--color-danger);margin-bottom:var(--space-2)">Zona de perigo</h4>
         <p class="text-sm text-muted mb-3">Excluir sua conta remove todos os seus dados permanentemente (LGPD Art. 18).</p>
-        <button id="deleteAccountBtn" class="btn btn-danger btn-sm">🗑️ Excluir minha conta</button>
+        <button id="deleteAccountBtn" class="btn btn-danger btn-sm"><i data-icon="trash"></i> Excluir minha conta</button>
       </div>
     </div>
   </main>
 
   <nav class="bottom-nav" role="navigation">
     <a href="dashboard.html" class="bottom-nav-item" aria-label="Início">
-      <span class="bottom-nav-icon">🏠</span>
+      <span class="bottom-nav-icon"><i data-icon="home"></i></span>
       <span class="bottom-nav-label">Início</span>
     </a>
     <a href="profile.html" class="bottom-nav-item active" aria-label="Perfil" aria-current="page">
-      <span class="bottom-nav-icon">👤</span>
+      <span class="bottom-nav-icon"><i data-icon="user"></i></span>
       <span class="bottom-nav-label">Perfil</span>
     </a>
   </nav>

@@ -21,7 +21,7 @@ if (
       padding:32px;border:2px solid #F0A500;border-radius:16px;
       background:#fffbf0;text-align:center;line-height:1.6
     ">
-      <div style="font-size:48px;margin-bottom:16px">⚙️</div>
+      <div style="font-size:48px;margin-bottom:16px"><i data-icon="wrench"></i></div>
       <h2 style="color:#1A3C6E;margin-bottom:12px">Configuração necessária</h2>
       <p style="color:#555;margin-bottom:20px">
         As credenciais do Supabase ainda são placeholder.<br>
